@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorPrzypadkow", "Gene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskRunner", "TaskRunner\TaskRunner\TaskRunner.csproj", "{05098F4E-8AF0-4181-BA5A-BBDABD572000}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResultChecker", "ResultChecker\ResultChecker.csproj", "{B987FF23-3CBB-4CE2-95AF-89DEA13C4637}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLLibrary", "SQLLibrary\SQLLibrary.csproj", "{9258A980-2A10-4796-BAC1-1769F13FB8B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{05098F4E-8AF0-4181-BA5A-BBDABD572000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05098F4E-8AF0-4181-BA5A-BBDABD572000}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05098F4E-8AF0-4181-BA5A-BBDABD572000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B987FF23-3CBB-4CE2-95AF-89DEA13C4637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B987FF23-3CBB-4CE2-95AF-89DEA13C4637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B987FF23-3CBB-4CE2-95AF-89DEA13C4637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B987FF23-3CBB-4CE2-95AF-89DEA13C4637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
