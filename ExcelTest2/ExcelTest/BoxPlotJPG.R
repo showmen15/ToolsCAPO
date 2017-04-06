@@ -4,7 +4,7 @@ dat <- read.csv(file=filenameInput, header=FALSE, sep=",")
 
 jpeg(filenameOutput)
 
-boxplot(dat, col=c("blue", "green", "red", "white"), names=c("WR","CP","RVO","PD"))
+boxplot(dat, col=c("blue", "green", "red", "white","orange","yellow"), names=c("WR","CP","RVO","PD","WRNEW","CPNEW"))
 
 }
 

@@ -14,14 +14,16 @@ using System.IO;
 namespace ExcelTest
 {
 
-		// http://csharp.net-informations.com/excel/csharp-create-excel.htm
-        //https://support.office.com/en-US/article/PERCENTILE-function-91B43A53-543C-4708-93DE-D626DEBDDDCA
-        //https://msdn.microsoft.com/en-us/library/bb404904(v=office.12).aspx
+    // http://csharp.net-informations.com/excel/csharp-create-excel.htm
+    //https://support.office.com/en-US/article/PERCENTILE-function-91B43A53-543C-4708-93DE-D626DEBDDDCA
+    //https://msdn.microsoft.com/en-us/library/bb404904(v=office.12).aspx
 
-        //tworzenie wykresu Box w Execelu
-        //https://www.youtube.com/watch?v=ucWmfmXb1kk
+    //tworzenie wykresu Box w Execelu
+    //https://www.youtube.com/watch?v=ucWmfmXb1kk
     public class ExcelExporter
     {
+        private string[] ExcelColumnFormater = new string[] { "A", "B", "C", "D", "E" };
+
         private string[] MathodColumnName = new string[] { "WR", "CP", "RVO", "PD" };
         
         Excel.Application xlApp;
@@ -55,7 +57,7 @@ namespace ExcelTest
             Excel.Worksheet xlWorkSheet = createNewSheet(sheetName);
             
             exportRowDate(xlWorkSheet,ds);
-            insertSummary(xlWorkSheet);
+            insertSummary(xlWorkSheet,ds);
             insertChartBoxValue(xlWorkSheet);
             createNewChart(xlWorkSheet);
         }
@@ -77,7 +79,7 @@ namespace ExcelTest
 
             Excel.Worksheet xlWorkSheet = createNewSheet(sheetName);
             exportRowDate(xlWorkSheet, ds);
-            insertSummary(xlWorkSheet);
+            insertSummary(xlWorkSheet,ds);
             insertChartImage(xlWorkSheet, chartAndTestResult.ChartPath);
             insertTestResult(xlWorkSheet, chartAndTestResult);
         }
@@ -87,12 +89,12 @@ namespace ExcelTest
             string[] testResult = chartAndTestResult.GetSplitTests;
 
             for (int i = 0; i < testResult.Length; i++)
-                SetCellValue(xlWorkSheet, string.Format("M{0}", i + 1), testResult[i]);
+                SetCellValue(xlWorkSheet, string.Format("N{0}", i + 1), testResult[i]);
 
             //czcionka powinna być "Curier New"
 
             Excel.Range formatRange;
-            formatRange = xlWorkSheet.get_Range("M1", string.Format("M{0}", testResult.Length));
+            formatRange = xlWorkSheet.get_Range("N1", string.Format("N{0}", testResult.Length));
             formatRange.Font.Name = "Courier New";
             // formatRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
             //formatRange.Font.Size = 10;
@@ -101,16 +103,22 @@ namespace ExcelTest
 
         private void insertChartImage(Excel.Worksheet xlWorkSheet, string sJPGPath)
         {
-            xlWorkSheet.Shapes.AddPicture(sJPGPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, 300, 100, 300, 250);
+            xlWorkSheet.Shapes.AddPicture(sJPGPath, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoCTrue, 400, 100, 300, 250);
         }
 
-        private void insertSummary(Excel.Worksheet xlWorkSheet)
+        private void insertSummary(Excel.Worksheet xlWorkSheet, DataSet ds)
         {
             SetCellValue(xlWorkSheet, "A1", "Metoda");
-            SetCellValue(xlWorkSheet, "B1", MathodColumnName[0]);
+
+            int rowBeginIndex = 1;
+            //column name
+            for (int i = 1; i < ds.Tables[0].Columns.Count; i++)
+                xlWorkSheet.Cells[rowBeginIndex, i + 1] = ds.Tables[0].Columns[i].Caption;
+
+         /*   SetCellValue(xlWorkSheet, "B1", MathodColumnName[0]);
             SetCellValue(xlWorkSheet, "C1", MathodColumnName[1]);
             SetCellValue(xlWorkSheet, "D1", MathodColumnName[2]);
-            SetCellValue(xlWorkSheet, "E1", MathodColumnName[3]);
+            SetCellValue(xlWorkSheet, "E1", MathodColumnName[3]);*/
 
             SetCellValue(xlWorkSheet, "A2", "Minimum");
             SetCellValue(xlWorkSheet, "A3", "Kwartyl1");
@@ -124,11 +132,17 @@ namespace ExcelTest
             SetCellValue(xlWorkSheet, "D2", "=MIN(D15:D44)");
             SetCellValue(xlWorkSheet, "E2", "=MIN(E15:E44)");
 
+            SetCellValue(xlWorkSheet, "F2", "=MIN(F15:F44)");
+            SetCellValue(xlWorkSheet, "G2", "=MIN(G15:G44)");
+
             //kwartyl 1
             SetCellValue(xlWorkSheet, "B3", "=QUARTILE(B15:B44,1)");
             SetCellValue(xlWorkSheet, "C3", "=QUARTILE(C15:C44,1)");
             SetCellValue(xlWorkSheet, "D3", "=QUARTILE(D15:D44,1)");
             SetCellValue(xlWorkSheet, "E3", "=QUARTILE(E15:E44,1)");
+
+            SetCellValue(xlWorkSheet, "F3", "=QUARTILE(F15:F44,1)");
+            SetCellValue(xlWorkSheet, "G3", "=QUARTILE(G15:G44,1)");
 
             //mediana
             SetCellValue(xlWorkSheet, "B4", "=MEDIAN(B15:B44)");
@@ -136,11 +150,17 @@ namespace ExcelTest
             SetCellValue(xlWorkSheet, "D4", "=MEDIAN(D15:D44)");
             SetCellValue(xlWorkSheet, "E4", "=MEDIAN(E15:E44)");
 
+            SetCellValue(xlWorkSheet, "F4", "=MEDIAN(F15:F44)");
+            SetCellValue(xlWorkSheet, "G4", "=MEDIAN(G15:G44)");
+
             //kwartyl 3
             SetCellValue(xlWorkSheet, "B5", "=QUARTILE(B15:B44,3)");
             SetCellValue(xlWorkSheet, "C5", "=QUARTILE(C15:C44,3)");
             SetCellValue(xlWorkSheet, "D5", "=QUARTILE(D15:D44,3)");
             SetCellValue(xlWorkSheet, "E5", "=QUARTILE(E15:E44,3)");
+
+            SetCellValue(xlWorkSheet, "F5", "=QUARTILE(F15:F44,3)");
+            SetCellValue(xlWorkSheet, "G5", "=QUARTILE(G15:G44,3)");
 
             //maksimum
             SetCellValue(xlWorkSheet, "B6", "=MAX(B15:B44)");
@@ -148,22 +168,27 @@ namespace ExcelTest
             SetCellValue(xlWorkSheet, "D6", "=MAX(D15:D44)");
             SetCellValue(xlWorkSheet, "E6", "=MAX(E15:E44)");
 
+            SetCellValue(xlWorkSheet, "F6", "=MAX(F15:F44)");
+            SetCellValue(xlWorkSheet, "G6", "=MAX(G15:G44)");
+
         }
 
         private void exportRowDate(Excel.Worksheet xlWorkSheet, DataSet ds)
         {
-            int rowBeginIndex = 15;
+            int rowBeginIndex = 14;
             string data = null;
 
             //column name
-            //for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
-            //    xlWorkSheet.Cells[rowBeginIndex, i + 1] = ds.Tables[0].Columns[i].Caption;
+            for (int i = 0; i < ds.Tables[0].Columns.Count; i++)
+                xlWorkSheet.Cells[rowBeginIndex, i + 1] = ds.Tables[0].Columns[i].Caption;
 
-            SetCellValue(xlWorkSheet, "A14", "Lp.");
+            rowBeginIndex = 15;
+
+            /*SetCellValue(xlWorkSheet, "A14", "Lp.");
             SetCellValue(xlWorkSheet, "B14", MathodColumnName[0]);
             SetCellValue(xlWorkSheet, "C14", MathodColumnName[1]);
             SetCellValue(xlWorkSheet, "D14", MathodColumnName[2]);
-            SetCellValue(xlWorkSheet, "E14", MathodColumnName[3]);
+            SetCellValue(xlWorkSheet, "E14", MathodColumnName[3]);*/
 
             for (int i = 0; i <= ds.Tables[0].Rows.Count - 1; i++)
             {

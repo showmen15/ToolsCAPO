@@ -22,10 +22,10 @@ namespace ExcelTest
         {
             InitializeComponent();
 
-            //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
           //  SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
 
-            SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
+          //  SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
         }
 
         // http://csharp.net-informations.com/excel/csharp-create-excel.htm
@@ -201,56 +201,30 @@ namespace ExcelTest
 
         private void button2_Click(object sender, EventArgs e)
         {
+            MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
 
-            ConfigItem[] itemConfigList = SQL.DataProviderExport.GetExportConfigList();
-            DataSet ds;
-
-            ExcelExporter export = new ExcelExporter();
-
-            foreach (var item in itemConfigList)
+            foreach (var map in mapList)
             {
-                ds = SQL.DataProviderExport.GetExportResult(item.ConfigID);
-                //export.ExportDate(item.Name, ds); //tworzy klasycznego exela z wykresem
-                export.ExportDateUsingR(item.Name, ds); //tworzy exela oraz dodaje wykres z R
+                ConfigItem[] itemConfigList = SQL.DataProviderExport.GetExportConfigList(map);
+                DataSet ds;
 
+                ExcelExporter export = new ExcelExporter();
+
+                foreach (var item in itemConfigList)
+                {
+                    ds = SQL.DataProviderExport.GetExportResult(item.ConfigID);
+                    //export.ExportDate(item.Name, ds); //tworzy klasycznego exela z wykresem
+                    export.ExportDateUsingR(item.Name, ds); //tworzy exela oraz dodaje wykres z R
+
+                }
+
+                //export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
+                export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
+
+                //export.Save("D:\\Desktop\\csharp-Excel12.xls");
             }
-            //export.Save("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\csharp-Excel12.xls");
-            export.Save("D:\\Desktop\\csharp-Excel12.xls");
 
             MessageBox.Show(this, "Excel file created , you can find the file c:\\csharp.net-informations.xls");
-
-
-
-
-
-            // SqlConnection cnn;
-            //string connectionString = null;
-            //string sql = null;
-
-            //connectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
-            //cnn = new SqlConnection(connectionString);
-            //cnn.Open();
-            //sql = "SELECT * FROM Result";
-
-            //SqlDataAdapter dscmd = new SqlDataAdapter(sql, cnn);
-
-
-
-
-
-            //new DataSet()
-
-
-
-            // dscmd.Fill(ds);
-
-            // for (int i = 0; i < 100; i++)
-            // {
-
-            // }
-
-
-
         }
 
         

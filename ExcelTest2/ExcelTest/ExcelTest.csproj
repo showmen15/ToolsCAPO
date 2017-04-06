@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ConfigItem.cs" />
     <Compile Include="DataProviderExport.cs" />
+    <Compile Include="MapItem.cs" />
     <Compile Include="RExporter.cs" />
     <Compile Include="RExporterResult.cs" />
     <Compile Include="SQL.cs" />
