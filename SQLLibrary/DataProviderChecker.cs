@@ -54,11 +54,13 @@ namespace SQLLibrary
             {
                 checkConnection();
 
-                cmd.CommandText = "UPDATE dbo.ResultChecker SET ####### WHERE ID_Case = @ID_Case AND ID_Trials = @ID_Trials";
+                cmd.CommandText = "UPDATE dbo.Result SET IsCollide = @ISCOLLIDE  WHERE ID_Case = @ID_Case AND ID_Trials = @ID_Trials";
+
                 cmd.Parameters.AddWithValue("@ID_Case", iID_Case);
                 cmd.Parameters.AddWithValue("@ID_Trials", iID_Trials);
+                cmd.Parameters.AddWithValue("@ISCOLLIDE", error == true ? 1 : 0);
 
-                //cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
             }
         }
     }
