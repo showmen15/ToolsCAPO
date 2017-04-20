@@ -25,7 +25,7 @@ namespace ResultChecker
 
         public double Distance(RobotPositionItem item)
         {
-            return Math.Sqrt(Math.Pow(X - item.X, 2) + Math.Pow(Y - item.X, 2));
+            return Math.Sqrt(Math.Pow(X - item.X, 2) + Math.Pow(Y - item.Y, 2));
         }
     }
 }

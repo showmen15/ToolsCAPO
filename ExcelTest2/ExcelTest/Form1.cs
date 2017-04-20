@@ -218,13 +218,13 @@ namespace ExcelTest
 
                 }
 
-                //export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
-                export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
+                export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
+               // export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
 
                 //export.Save("D:\\Desktop\\csharp-Excel12.xls");
             }
 
-            MessageBox.Show(this, "Excel file created , you can find the file c:\\csharp.net-informations.xls");
+            MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
         

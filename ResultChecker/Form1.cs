@@ -21,10 +21,10 @@ namespace ResultChecker
         {
             InitializeComponent();
 
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
+            //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
             //  SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
 
-            //  SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
+              SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -65,7 +65,9 @@ namespace ResultChecker
                                     continue;
                                 else
                                 {
-                                    error = (state1.Distance(state2) <= RobotSize);
+                                    double distance = state1.Distance(state2);
+
+                                    error = (distance <= RobotSize);
                                     break;
                                 }
                             }
