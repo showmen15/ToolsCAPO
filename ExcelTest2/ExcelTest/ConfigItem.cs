@@ -14,7 +14,11 @@ namespace ExcelTest
            public ConfigItem(int iConfigID, string sName)
            {
                ConfigID = iConfigID;
-               Name = sName;
+               Name = sName.Replace(";", string.Empty);
+
+            if (Name.Length > 30)
+                Name = Name.Substring(0, 30);
+                    
            }
     }
 }
