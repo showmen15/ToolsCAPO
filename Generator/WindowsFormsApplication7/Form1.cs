@@ -187,35 +187,48 @@ namespace WindowsFormsApplication7
             // WygenerujKonfiguracjeTestowaAlgorytmuPojedynczeRoboty();
             // WaskiePrzejscieeTestowaAlgorytmuPojedynczeRobotyConfig();
 
-            //
-            // WygenerujPrzypadkiDlaOkregu();
+            //Przypadki testowe orgianlne RVO
+            //rvoBenchmarkCircle();
 
             //Przypadki testowe orgianlne RVO
-            rvoBenchmarkCircle();
-
-            //Przypadki testowe orgianlne RVO
-           // rvoBenchmarkBlocks();
+            // rvoBenchmarkBlocks();
 
             //WąskiePrzejścieMijankaNowa
             //WaskiePrzejscieMijankaNowa();
 
             //Konfiguracja dla Waskiego Przejscia 
-           // WygenerujKonfiguracjeWaskiKorytarz();
-           // WaskiKorytarzConfig();
+            // WygenerujKonfiguracjeWaskiKorytarz();
+            // WaskiKorytarzConfig();
 
             //Przypadki testowe dla skrzyżowania
-             //WygenerujKonfiguracjeSkrzyzowanie();
+            //WygenerujKonfiguracjeSkrzyzowanie();
+
+            //WygenerujKonfiguracjeProstokat();
+
+            //Circle
+            // WygenerujPrzypadkiDlaOkregu(4);
+            // WygenerujPrzypadkiDlaOkregu(8);
+            // WygenerujPrzypadkiDlaOkregu(12);
 
             //Przypadki testowe dla skrzyżowania typu 8
-            //WygenerujKonfiguracjeSkrzyzowanieTypu8();
+            WygenerujKonfiguracjeSkrzyzowanieTypu8();
+        }
 
+        private void WygenerujKonfiguracjeProstokat()
+        {
+          string ss =  @"0;1.57; 0;1;1; 0;6;4
+1; 0; 0; 6; 1; 0; 1; 4
+2; -1.57; 0; 6; 4; 0; 1; 1
+3; -3.14; 0; 1; 4; 0; 6; 1";
+
+            saveConfig(string.Format("Otwarta Przestrzeń 4 Roboty {0}", 4), ss);
         }
 
 
         //private void OtwartaPrzestrzenConfigNowa()
         //{
-            
-            
+
+
         //    double odlegloscMiedzyRobotami = 0.3;
         //    double[] pozycjeRobotowGornych;
         //    double[] pozycjeRobotowDolnych;
@@ -400,18 +413,26 @@ namespace WindowsFormsApplication7
             string ss = output.ToString();
         }
 
-        private void WygenerujPrzypadkiDlaOkregu()
+        private void WygenerujPrzypadkiDlaOkregu(int iloscRobotow)
         {
             StringBuilder output = new StringBuilder();
-            
-            double x = 3;
-            double y = 3;
+
+            double x = 2.5;
+            double y = 2.5;
             double R = 2;
 
-            const int length = 13;
+            int length = iloscRobotow;
+            double step = 6.28 / length;
 
-            double[] katy = new double[length] { -3.14, -2.75, -2.36, -1.97, -1.57,-1.19, -0.78, -0.39, 0.0, 0.39, 0.78, 1.17, 1.57 }; // { -3.14, -2.36, -1.57, -0.78, 0.0, 0.78, 1.57 }; //{ -3.14, -1.57, 0.0, 1.57 };
-          //  double[] katyStartowe =new double[length] {1.57,0.0,-1.57, -3.14 };
+            double[] katy = new double[length]; // { -3.14, -2.36, -1.57, -0.78, 0.0, 0.78, 1.57, 2.35 };//{ -3.14, -1.57, 0.0, 1.57 };  //{ -3.14, -2.75, -2.36, -1.97, -1.57,-1.19, -0.78, -0.39, 0.0, 0.39, 0.78, 1.17, 1.57 }; // { -3.14, -2.36, -1.57, -0.78, 0.0, 0.78, 1.57 }; //{ -3.14, -1.57, 0.0, 1.57 };
+
+            for (int i = 0; i < length; i++)
+            {
+                katy[i] = -3.14 + i * step;
+            }
+
+            
+            //double[] katy = new double[length] {1.57,0.0,-1.57, -3.14 };
 
 
             double[] XprimStart = new double[length];
@@ -436,8 +457,9 @@ namespace WindowsFormsApplication7
             }
 
 
-            string ss = output.ToString();
+            //string ss = output.ToString();
 
+            saveConfig(string.Format("Circle: {0}", iloscRobotow), output.ToString());
 
         }
 
@@ -978,35 +1000,47 @@ namespace WindowsFormsApplication7
 
         public void WygenerujKonfiguracjeSkrzyzowanieTypu8()
         {
-            Vector3D StartRobot1 = new Vector3D(1, 2, -2.5);
-            Vector3D EndRobot1 = new Vector3D(2, 1, 0);
+            string sConfig = @"0;0; 0;0.5;2.5;  2;2.5;2.5;  0;4.5;2.5
+1;0; 0;2.5;4.5;  2;2.5;2.5;  0;2.5;0.5";
 
-            Vector3D StartRobot2 = new Vector3D(3, 4, 5.0);
-            Vector3D EndRobot2 = new Vector3D(4, 3, 0);
+            saveConfig("Skrzyż. Typ 8 Roboty 2", sConfig);
 
-            string sName = "";
+            sConfig = @"1;0.0;  0;0.5;0.5;  0;0.5;2.5;      2;2.5;2.5;    0;4.5;2.5;  0.0;4.5;4.5
+2;0.0;  0;4.5;4.5;  0;2.5;4.5;      2;2.5;2.5;    0;2.5;0.5;  0.0;0.5;0.5
+3;0.0;  0;0.5;2.5;  2;2.5;2.5;    0;4.5;2.5;      0;4.5;4.5;  0.0;2.5;4.5
+4;0.0;  0;2.5;4.5;  2;2.5;2.5;    0;2.5;0.5;      0;0.5;0.5;  0.0;0.5;1.5";
 
-            Vector3D[] StartRobots = new Vector3D[] { StartRobot1, StartRobot2 };
-            Vector3D[] EndRobots = new Vector3D[] { EndRobot1, EndRobot2 };
+            saveConfig("Skrzyż. Typ 8 Roboty 4", sConfig);
 
-            for (int i = 0; i < 2; i++)
-            {
-                string[] temp = permutacjaWR(i + 1);
+            /*   Vector3D StartRobot1 = new Vector3D(1, 2, -2.5);
+               Vector3D EndRobot1 = new Vector3D(2, 1, 0);
 
-                for (int j = 0; j < temp.Length; j++)
-                {
-                    string sConfig = "";
-                    string tmp = temp[j];
-                    sName = string.Format("Skrzyżowanie typu 8 {0}; Ustawienie {1}", i + 1, j + 1);
+               Vector3D StartRobot2 = new Vector3D(3, 4, 5.0);
+               Vector3D EndRobot2 = new Vector3D(4, 3, 0);
 
-                    for (int k = 0; k < tmp.Length; k++)
-                        sConfig += string.Format("{0};{1}; 0;{2};{3}; 0;{4};{5}\r\n", tmp[k], StartRobots[k].Z, StartRobots[k].X, StartRobots[k].Y, EndRobots[k].X, EndRobots[k].Y);
+               string sName = "";
+
+               Vector3D[] StartRobots = new Vector3D[] { StartRobot1, StartRobot2 };
+               Vector3D[] EndRobots = new Vector3D[] { EndRobot1, EndRobot2 };
+
+               for (int i = 0; i < 2; i++)
+               {
+                   string[] temp = permutacjaWR(i + 1);
+
+                   for (int j = 0; j < temp.Length; j++)
+                   {
+                       string sConfig = "";
+                       string tmp = temp[j];
+                       sName = string.Format("Skrz. typu 8 {0}; Ustaw. {1}", i + 1, j + 1);
+
+                       for (int k = 0; k < tmp.Length; k++)
+                           sConfig += string.Format("{0};{1}; 0;{2};{3}; 0;{4};{5}\r\n", tmp[k], StartRobots[k].Z, StartRobots[k].X, StartRobots[k].Y, EndRobots[k].X, EndRobots[k].Y);
 
 
-                    sConfig = sConfig.Remove(sConfig.Length - 2, 2).Replace(",", ".");
-                    // saveConfig(sName, sConfig);
-                }
-            }
+                       sConfig = sConfig.Remove(sConfig.Length - 2, 2).Replace(",", ".");
+                       // saveConfig(sName, sConfig);
+                   }
+               }*/
         }
 
 
