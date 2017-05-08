@@ -14,7 +14,7 @@ namespace ExcelTest
            public ConfigItem(int iConfigID, string sName)
            {
                ConfigID = iConfigID;
-               Name = sName.Replace(";", string.Empty);
+               Name = sName.Replace(";", string.Empty).Replace(":",string.Empty);
 
             if (Name.Length > 30)
                 Name = Name.Substring(0, 30);
