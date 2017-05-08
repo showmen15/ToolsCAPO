@@ -33,6 +33,7 @@ namespace TaskRunner
         {
             InitializeComponent();
             timerToEnd.Stop();
+            txtServerName.SelectedIndex = 0;
         }
 
         private void run()
@@ -291,9 +292,8 @@ namespace TaskRunner
 
         private void button1_Click(object sender, EventArgs e)
         {
-            checkFreeScreenVideoRecorderWorking(-1);
-            
-         //   Beep(2500, 1000);
+            Beep(2500, 1000);
+            //  checkFreeScreenVideoRecorderWorking(-1);
         }
 
         private void checkFreeScreenVideoRecorderWorking(int Timeout)

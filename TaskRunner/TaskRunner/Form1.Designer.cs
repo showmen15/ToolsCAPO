@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.butRun = new System.Windows.Forms.Button();
-            this.txtServerName = new System.Windows.Forms.TextBox();
             this.txtUser = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -45,6 +44,7 @@
             this.chkRecord = new System.Windows.Forms.CheckBox();
             this.chkVisualizer = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.txtServerName = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // butRun
@@ -56,14 +56,6 @@
             this.butRun.Text = "Run";
             this.butRun.UseVisualStyleBackColor = true;
             this.butRun.Click += new System.EventHandler(this.butRun_Click);
-            // 
-            // txtServerName
-            // 
-            this.txtServerName.Location = new System.Drawing.Point(78, 4);
-            this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Size = new System.Drawing.Size(272, 20);
-            this.txtServerName.TabIndex = 1;
-            this.txtServerName.Text = "SZSZ\\SQLEXPRESS";
             // 
             // txtUser
             // 
@@ -189,15 +181,27 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 15;
-            this.button1.Text = "button1";
+            this.button1.Text = "Beep";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // txtServerName
+            // 
+            this.txtServerName.FormattingEnabled = true;
+            this.txtServerName.Items.AddRange(new object[] {
+            "WR-7-BASE-74\\SQLEXPRESS",
+            "SZSZ\\SQLEXPRESS"});
+            this.txtServerName.Location = new System.Drawing.Point(78, 3);
+            this.txtServerName.Name = "txtServerName";
+            this.txtServerName.Size = new System.Drawing.Size(272, 21);
+            this.txtServerName.TabIndex = 16;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(369, 175);
+            this.Controls.Add(this.txtServerName);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chkVisualizer);
             this.Controls.Add(this.chkRecord);
@@ -211,7 +215,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUser);
-            this.Controls.Add(this.txtServerName);
             this.Controls.Add(this.butRun);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -223,7 +226,6 @@
         #endregion
 
         private System.Windows.Forms.Button butRun;
-        private System.Windows.Forms.TextBox txtServerName;
         private System.Windows.Forms.TextBox txtUser;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Label label1;
@@ -238,6 +240,7 @@
         private System.Windows.Forms.CheckBox chkRecord;
         private System.Windows.Forms.CheckBox chkVisualizer;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox txtServerName;
     }
 }
 
