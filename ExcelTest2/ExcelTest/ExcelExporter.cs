@@ -88,17 +88,20 @@ namespace ExcelTest
         {
             string[] testResult = chartAndTestResult.GetSplitTests;
 
-            for (int i = 0; i < testResult.Length; i++)
-                SetCellValue(xlWorkSheet, string.Format("N{0}", i + 1), testResult[i]);
+            if (testResult.Length > 0)
+            {
+                for (int i = 0; i < testResult.Length; i++)
+                    SetCellValue(xlWorkSheet, string.Format("N{0}", i + 1), testResult[i]);
 
-            //czcionka powinna być "Curier New"
+                //czcionka powinna być "Curier New"
 
-            Excel.Range formatRange;
-            formatRange = xlWorkSheet.get_Range("N1", string.Format("N{0}", testResult.Length));
-            formatRange.Font.Name = "Courier New";
-            // formatRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
-            //formatRange.Font.Size = 10;
-            //xlWorkSheet.Cells[1, 2] = "Red";
+                Excel.Range formatRange;
+                formatRange = xlWorkSheet.get_Range("N1", string.Format("N{0}", testResult.Length));
+                formatRange.Font.Name = "Courier New";
+                // formatRange.Font.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+                //formatRange.Font.Size = 10;
+                //xlWorkSheet.Cells[1, 2] = "Red";
+            }
         }
 
         private void insertChartImage(Excel.Worksheet xlWorkSheet, string sJPGPath)

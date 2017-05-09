@@ -43,11 +43,19 @@ namespace ExcelTest
         private void exportToCSV(DataSet ds, string rowData)
         {
             StringBuilder csv = new StringBuilder();
+            string date = string.Empty;
 
             for (int i = 0; i <= ds.Tables[0].Rows.Count - 1; i++)
             {
                 for (int j = 1; j <= ds.Tables[0].Columns.Count - 1; j++)
-                    csv.Append(string.Format("{0},", ds.Tables[0].Rows[i].ItemArray[j].ToString()));
+                {
+                    date = ds.Tables[0].Rows[i].ItemArray[j].ToString();
+
+                    if (date == "0")
+                        csv.Append(string.Format("{0},", string.Empty));
+                    else
+                        csv.Append(string.Format("{0},", date));
+                }
 
                 csv.Remove(csv.Length - 1, 1);
                 csv.AppendLine();
