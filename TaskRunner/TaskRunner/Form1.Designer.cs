@@ -124,7 +124,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(15, 98);
+            this.textBox1.Location = new System.Drawing.Point(15, 116);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(335, 43);
@@ -134,7 +134,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            this.label5.Location = new System.Drawing.Point(305, 60);
+            this.label5.Location = new System.Drawing.Point(247, 56);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(45, 16);
             this.label5.TabIndex = 11;
@@ -158,7 +158,7 @@
             // chkRecord
             // 
             this.chkRecord.AutoSize = true;
-            this.chkRecord.Location = new System.Drawing.Point(15, 147);
+            this.chkRecord.Location = new System.Drawing.Point(15, 169);
             this.chkRecord.Name = "chkRecord";
             this.chkRecord.Size = new System.Drawing.Size(61, 17);
             this.chkRecord.TabIndex = 13;
@@ -168,7 +168,7 @@
             // chkVisualizer
             // 
             this.chkVisualizer.AutoSize = true;
-            this.chkVisualizer.Location = new System.Drawing.Point(78, 146);
+            this.chkVisualizer.Location = new System.Drawing.Point(78, 168);
             this.chkVisualizer.Name = "chkVisualizer";
             this.chkVisualizer.Size = new System.Drawing.Size(70, 17);
             this.chkVisualizer.TabIndex = 14;
@@ -177,7 +177,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(261, 147);
+            this.button1.Location = new System.Drawing.Point(261, 163);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 15;
@@ -200,7 +200,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 175);
+            this.ClientSize = new System.Drawing.Size(361, 189);
             this.Controls.Add(this.txtServerName);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chkVisualizer);

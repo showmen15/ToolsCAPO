@@ -41,90 +41,97 @@ namespace TaskRunner
             string exeFilePath;
             process = null;
 
-            foreach (RunConfig item in taskList)
+            do
             {
-                try
+
+                taskList = getTaskConfig();
+
+                foreach (RunConfig item in taskList)
                 {
-                    if (chkVisualizer.Checked)
+                    try
                     {
-                        createVisualizer(item.Visualizer, item.ID_Case);
-                        System.Threading.Thread.Sleep(2000);
-                    }
-
-                    lblCaseName.Invoke(new Action(delegate ()
-                    {
-                        lblCaseName.Text = String.Format("CaseID: {0} ProgramID: {1}, CaseName: {2}", item.ID_Case, item.ID_Program, item.Name_Case);
-                    }));
-
-                    if (chkRecord.Checked)
-                    {
-                        recorder.StartRecord();
-                    }
-
-                    exeFilePath = getProgramPath(item.ID_Program);
-
-                    process = new Process();
-
-                    process.StartInfo.FileName = "java.exe";
-                    process.StartInfo.Arguments = string.Format(" -jar {0} {1} {2}", exeFilePath, item.ID_Case.ToString(), item.ID_Program);
-
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
-                    // process.StartInfo.RedirectStandardOutput = true;
-                    // process.StartInfo.RedirectStandardError = true;
-                    process.Start();
-
-                    Timeout = item.Timeout;
-
-                    label5.Invoke(new Action(delegate ()
-                    {
-                        timerToEnd.Start();
-                    }));
-
-
-                    if (item.Timeout == 0)
-                        process.WaitForExit();
-                    else
-                    {
-                        try
+                        if (chkVisualizer.Checked)
                         {
-                            if (!process.WaitForExit(item.Timeout * 1000))
-                                process.Kill();
+                            createVisualizer(item.Visualizer, item.ID_Case);
+                            System.Threading.Thread.Sleep(2000);
                         }
-                        catch(Exception)
+
+                        lblCaseName.Invoke(new Action(delegate ()
                         {
-                            clearProcess();
+                            lblCaseName.Text = String.Format("CaseID: {0} ProgramID: {1}, CaseName: {2}", item.ID_Case, item.ID_Program, item.Name_Case);
+                        }));
+
+                        if (chkRecord.Checked)
+                        {
+                            recorder.StartRecord();
                         }
-                    }
 
-                    if (chkRecord.Checked)
-                    {
-                        recorder.StopRecord();
-                        recorder.RenameRecordedFile1(item);
-                    }
+                        exeFilePath = getProgramPath(item.ID_Program);
 
-                    if (chkVisualizer.Checked)
+                        process = new Process();
+
+                        process.StartInfo.FileName = "java.exe";
+                        process.StartInfo.Arguments = string.Format(" -jar {0} {1} {2}", exeFilePath, item.ID_Case.ToString(), item.ID_Program);
+
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.CreateNoWindow = true;
+                        // process.StartInfo.RedirectStandardOutput = true;
+                        // process.StartInfo.RedirectStandardError = true;
+                        process.Start();
+
+                        Timeout = item.Timeout;
+
+                        label5.Invoke(new Action(delegate ()
+                        {
+                            timerToEnd.Start();
+                        }));
+
+
+                        if (item.Timeout == 0)
+                            process.WaitForExit();
+                        else
+                        {
+                            try
+                            {
+                                if (!process.WaitForExit(item.Timeout * 1000))
+                                    process.Kill();
+                            }
+                            catch (Exception)
+                            {
+                                clearProcess();
+                            }
+                        }
+
+                        if (chkRecord.Checked)
+                        {
+                            recorder.StopRecord();
+                            recorder.RenameRecordedFile1(item);
+                        }
+
+                        if (chkVisualizer.Checked)
+                        {
+                            clearVisualizer();
+                        }
+
+                        process = null;
+
+                        label5.Invoke(new Action(delegate ()
+                        {
+                            timerToEnd.Stop();
+                        }));
+
+                        if (StopWork)
+                            break;
+
+                    }
+                    catch (Exception)
                     {
+                        clearProcess();
                         clearVisualizer();
                     }
-
-                    process = null;
-
-                    label5.Invoke(new Action(delegate ()
-                    {
-                        timerToEnd.Stop();
-                    }));
-
-                    if (StopWork)
-                        break;
-
-                }
-                catch(Exception)
-                {
-                    clearProcess();
-                    clearVisualizer();
                 }
             }
+            while (!StopWork && (taskList.Count > 0));
 
             butStop.Invoke(new Action(delegate ()
             {
@@ -177,8 +184,7 @@ namespace TaskRunner
 
         private void butRun_Click(object sender, EventArgs e)
         {
-            taskList = getTaskConfig();
-
+           
             runnerTask = new Task(new Action(run));
 
             runnerTask.Start();
@@ -192,7 +198,13 @@ namespace TaskRunner
         {
             List<RunConfig> tasks = new List<RunConfig>();
 
-            string sConnectionString = string.Format("Server={0};Database=Doktorat;User Id={1};Password={2};",txtServerName.Text,txtUser.Text,txtPassword.Text);
+            string sConnectionString = string.Empty;
+
+            txtServerName.Invoke(new Action(delegate ()
+            {
+                sConnectionString = string.Format("Server={0};Database=Doktorat;User Id={1};Password={2};", txtServerName.Text, txtUser.Text, txtPassword.Text);
+            }));
+
 
             using (SqlConnection con = new SqlConnection(sConnectionString))
             {
@@ -200,13 +212,13 @@ namespace TaskRunner
 
                 using (SqlCommand cmd = new SqlCommand("", con))
                 {
-                    cmd.CommandText = "SELECT ID_Program,Timeout,ID_Case,Name_Case,VisualizerID, Name_Program, Name_Map, Name_Config FROM dbo.TasksList ORDER BY ID_Config,id_trials,ID_Program";
+                    cmd.CommandText = "SELECT top 10 ID_Program,Timeout,ID_Case,Name_Case,VisualizerID, Name_Program, Name_Map, Name_Config FROM dbo.TasksList ORDER BY ID_Config,id_trials,ID_Program";
 
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
                         {
-                            RunConfig temp = new RunConfig((int)rdr["ID_Program"], (int)rdr["Timeout"], (int)rdr["ID_Case"], rdr["Name_Case"].ToString(),(int) rdr["VisualizerID"]);
+                            RunConfig temp = new RunConfig((int)rdr["ID_Program"], (int)rdr["Timeout"], (int)rdr["ID_Case"], rdr["Name_Case"].ToString(), (int)rdr["VisualizerID"]);
                             temp.Name_Program = (string)rdr["Name_Program"];
                             temp.Name_Map = (string)rdr["Name_Map"];
                             temp.Name_Config = (string)rdr["Name_Config"];

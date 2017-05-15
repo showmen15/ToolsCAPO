@@ -62,6 +62,16 @@ namespace SQLLibrary
 
                 cmd.ExecuteNonQuery();
             }
+
+            public static void DataOptimizationChart()
+            {
+                checkConnection();
+
+                cmd.CommandText = "dbo.p_DeleteResult";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

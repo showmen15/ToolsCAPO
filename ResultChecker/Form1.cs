@@ -29,6 +29,18 @@ namespace ResultChecker
 
         private void button1_Click(object sender, EventArgs e)
         {
+            timerRunner.Start();
+            butStart.Enabled = false;
+            butStop.Enabled = true;
+        }
+
+        private void runOptimalizer()
+        {
+            SQL.DataProviderChecker.DataOptimizationChart();
+        }
+
+        private void runColider()
+        {
             ErrorCount = 0;
             lblErrorCount.Text = ErrorCount.ToString();
 
@@ -93,6 +105,31 @@ namespace ResultChecker
 
             lblErrorCount.Text = ErrorCount.ToString();
 
+        }
+
+        private void timerRunner_Tick(object sender, EventArgs e)
+        {
+            try
+            {                
+                timerRunner.Stop();
+                textBox1.Clear();
+
+                textBox1.Text += "Start Working" + DateTime.Now.ToString("dd.MM.yyyy hh.mm.ss");
+                runColider();
+                runOptimalizer();
+                textBox1.Text += "End Working" + DateTime.Now.ToString("dd.MM.yyyy hh.mm.ss");
+            }
+            finally
+            {
+                timerRunner.Start();
+            }
+        }
+
+        private void butStop_Click(object sender, EventArgs e)
+        {
+            timerRunner.Stop();
+            butStart.Enabled = true;
+            butStop.Enabled = false;
         }
     }
 }
