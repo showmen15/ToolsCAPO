@@ -84,14 +84,9 @@
     <Folder Include="Maps\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Programs\FearFactorBase.jar" />
-    <Content Include="Programs\FearFactorWithPassageThroughTheDoor.jar" />
     <Content Include="Programs\HybridRVO.jar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Programs\RVOBase.jar" />
-    <Content Include="Programs\RVOWithRightHand.jar" />
-    <Content Include="Visualizer\Fear.jar" />
     <Content Include="Visualizer\RVO.jar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
