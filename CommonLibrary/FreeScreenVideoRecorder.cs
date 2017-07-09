@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonLibrary;
 
 namespace TaskRunner
 {
@@ -77,6 +78,11 @@ namespace TaskRunner
 
             // Win32.SendMessage(btnRecActWinWindow, Win32.BM_CLICK, 0, 0);
 
+        }
+
+        public void RenameRecordedFileVisualizer(VisualizerConfig item)
+        {
+            throw new NotImplementedException();
         }
 
         public void StartRecord()
