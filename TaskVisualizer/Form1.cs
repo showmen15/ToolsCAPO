@@ -71,6 +71,7 @@ namespace TaskVisualizer
 
                 recorder.StopRecord();
                 recorder.RenameRecordedFileVisualizer(item);
+                setVisualizerConfigAsDone(item);
 
                 visualizer = null;
             }
@@ -136,25 +137,45 @@ namespace TaskVisualizer
 
                 using (SqlCommand cmd = new SqlCommand("", con))
                 {
-                    cmd.CommandText = "";
+                    cmd.CommandText = "select ID_Case,ID_Trials,Name from dbo.TaskVisualizerList";
 
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
                         {
-
-                         /*   RunConfig temp = new RunConfig((int)rdr["ID_Program"], (int)rdr["Timeout"], (int)rdr["ID_Case"], rdr["Name_Case"].ToString(), (int)rdr["VisualizerID"]);
-                            temp.Name_Program = (string)rdr["Name_Program"];
-                            temp.Name_Map = (string)rdr["Name_Map"];
-                            temp.Name_Config = (string)rdr["Name_Config"];
-
-                            tasks.Add(temp);*/
+                            VisualizerConfig temp = new VisualizerConfig((int)rdr["ID_Case"], (int)rdr["ID_Trials"], rdr["Name"].ToString());
+                            tasks.Add(temp);
                         }
                     }
                 }
             }
 
             return tasks;
+        }
+
+        private void setVisualizerConfigAsDone(VisualizerConfig task)
+        {
+            string sConnectionString = string.Empty;
+
+            txtServerName.Invoke(new Action(delegate ()
+            {
+                sConnectionString = string.Format("Server={0};Database=Doktorat;User Id={1};Password={2};", txtServerName.Text, txtUser.Text, txtPassword.Text);
+            }));
+
+            using (SqlConnection con = new SqlConnection(sConnectionString))
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("", con))
+                {
+                    cmd.CommandText = "update dbo.TaskVisualizer SET  VisualizeCompleted = 1 WHERE ID_Case = @ID_Case  AND ID_Trials = @ID_Trials ";
+
+                    cmd.Parameters.AddWithValue("@ID_Case", task.ID_Case);
+                    cmd.Parameters.AddWithValue("@ID_Trials", task.ID_Trials);
+
+                    cmd.ExecuteNonQuery()
+                }
+            }
         }
 
 

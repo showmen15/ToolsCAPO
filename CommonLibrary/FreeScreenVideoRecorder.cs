@@ -86,7 +86,20 @@ namespace CommonLibrary
 
         public void RenameRecordedFileVisualizer(VisualizerConfig item)
         {
+
             throw new NotImplementedException();
+        /*    if (isWrongInit)
+                return;
+
+            string sNewFileName = string.Format("{0}_{1}_{2}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config);
+            string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
+
+            if (System.IO.File.Exists(sNewFileDirectory))
+            {
+                sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config, DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss"));
+                sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
+            }*/
+
         }
 
         public void StartRecord()
