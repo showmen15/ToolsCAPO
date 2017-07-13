@@ -22,8 +22,8 @@ namespace ExcelTest
         {
             InitializeComponent();
 
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
-          //  SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
+           // SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
+            SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
 
           //  SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
         }
@@ -218,8 +218,8 @@ namespace ExcelTest
 
                 }
 
-                export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
-               // export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
+                //export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
+                export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
 
                 //export.Save("D:\\Desktop\\csharp-Excel12.xls");
             }

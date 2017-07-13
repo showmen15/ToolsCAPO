@@ -40,6 +40,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLLibrary", "SQLLibrary\SQ
 		{05098F4E-8AF0-4181-BA5A-BBDABD572000} = {05098F4E-8AF0-4181-BA5A-BBDABD572000}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskVisualizer", "TaskVisualizer\TaskVisualizer.csproj", "{A29BAB50-19B4-4F4D-A8C7-FDCA156CE708}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "CommonLibrary\CommonLibrary.csproj", "{99A52CCF-C05A-47EE-BDA6-DE15F39C921F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +74,14 @@ Global
 		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9258A980-2A10-4796-BAC1-1769F13FB8B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A29BAB50-19B4-4F4D-A8C7-FDCA156CE708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A29BAB50-19B4-4F4D-A8C7-FDCA156CE708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A29BAB50-19B4-4F4D-A8C7-FDCA156CE708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A29BAB50-19B4-4F4D-A8C7-FDCA156CE708}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A52CCF-C05A-47EE-BDA6-DE15F39C921F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A52CCF-C05A-47EE-BDA6-DE15F39C921F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A52CCF-C05A-47EE-BDA6-DE15F39C921F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A52CCF-C05A-47EE-BDA6-DE15F39C921F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
