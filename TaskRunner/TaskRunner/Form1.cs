@@ -319,6 +319,16 @@ namespace TaskRunner
                     Beep(2500, 1000);
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            recorder.StartRecordWindow();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            recorder.StopRecord();
+        }
     }
 
 

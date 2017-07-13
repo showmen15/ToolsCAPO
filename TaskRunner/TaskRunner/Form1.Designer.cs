@@ -45,6 +45,8 @@
             this.chkVisualizer = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.txtServerName = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // butRun
@@ -196,11 +198,33 @@
             this.txtServerName.Size = new System.Drawing.Size(272, 21);
             this.txtServerName.TabIndex = 16;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(42, 218);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 17;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(146, 227);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 18;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(361, 189);
+            this.ClientSize = new System.Drawing.Size(361, 266);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.txtServerName);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chkVisualizer);
@@ -241,6 +265,8 @@
         private System.Windows.Forms.CheckBox chkVisualizer;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox txtServerName;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

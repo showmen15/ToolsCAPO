@@ -26,10 +26,18 @@ namespace TaskRunner
         public const int BM_CLICK = 0x00F5;
 
 
+        public const int WM_ACTIVATEAPP = 0x001C;
+
+        public const int WM_WINDOWPOSCHANGING = 0x0046;
+        public const int WM_WINDOWPOSCHANGED = 0x0047;
+
         public const short SWP_NOMOVE = 0X2;
         public const short SWP_NOSIZE = 1;
         public const short SWP_NOZORDER = 0X4;
         public const int SWP_SHOWWINDOW = 0x0040;
+
+
+        public const int MK_LBUTTON = 0x0001;
 
         // The FindWindow function retrieves a handle to the top-level window whose class name
         // and window name match the specified strings. This function does not search child windows.
@@ -65,6 +73,47 @@ namespace TaskRunner
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
 
+
+        [DllImport("User32.dll", EntryPoint = "SetForegroundWindow")]
+        public static extern IntPtr SetForegroundWindowNative(IntPtr hWnd);
+
+
+        [DllImport("User32.Dll")]
+        public static extern long SetCursorPos(int x, int y);
+
+
+        [DllImport("user32.dll")]
+        public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
+
+        public struct Rect
+        {
+            public int Left { get; set; }
+            public int Top { get; set; }
+            public int Right { get; set; }
+            public int Bottom { get; set; }
+
+        }
+
+        [DllImport("User32.Dll")]
+        public static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+
+        [DllImport("User32.Dll")]
+        public static extern IntPtr SetFocus(IntPtr hWnd);
+
+        [DllImport("User32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
+        public static void MouseLeftClick(System.Drawing.Point p, int handle = 0)
+        {
+            //build coordinates
+            int coordinates = p.X | (p.Y << 16);
+            //send left button down
+            SendMessage(handle, 0x201, 0x1, coordinates);
+            //send left button up
+            SendMessage(handle, 0x202, 0x1, coordinates);
+        }
 
         public Win32()
         {

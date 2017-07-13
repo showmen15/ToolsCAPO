@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,9 @@ namespace TaskRunner
 {
     public class FreeScreenVideoRecorder
     {
+        //[DllImport("user32.dll")]
+        //public static extern int SetForegroundWindow(IntPtr hWnd);
+
         private string movieDirectoryInput = @"D:\Nagrania";
         private string movieDirectoryOutput = @"D:\NagraniaOutput";
 
@@ -236,6 +240,113 @@ namespace TaskRunner
             else
                 return false;
         }
+
+        public void StartRecordWindow()
+        {
+
+
+
+            //Start nagrania 
+
+            Int32 lblAppnameWindow = Win32.FindWindow("Qt5QWindowIcon", "FreeScreenVideoRecorder");
+
+            if (lblAppnameWindow == 0)
+            {
+                isWrongInit = true;
+                return;
+            }
+
+            isWrongInit = false;
+
+            var centrWidgetWindow = Win32.FindWindowEx(lblAppnameWindow, 0, "Qt5QWindowIcon", "centrWidgetWindow");
+            var frmCentralWindow = Win32.FindWindowEx(centrWidgetWindow, 0, "Qt5QWindowIcon", "frmCentralWindow");
+            var btnRecWinWindow = Win32.FindWindowEx(frmCentralWindow, 0, "Qt5QWindowIcon", "btnRecWinWindow");
+
+            //symulacja klikniecia
+            Win32.SendMessage(btnRecWinWindow, 0x0201, 0x00000001, 0x00100011);
+            Win32.SendMessage(btnRecWinWindow, 0x0202, 0x00000000, 0x00100010);
+
+            Int32 Panelsterowania = 0;
+
+
+            //System.Threading.Thread.Sleep(400);
+
+            int lblSimmulatorWindow = Win32.FindWindow("Notepad", "Bez tytułu — Notatnik");
+
+            Win32.Rect SimmulatorWindowRect = new Win32.Rect();
+            Win32.GetWindowRect((IntPtr) lblSimmulatorWindow, ref SimmulatorWindowRect);
+
+            Win32.SetCursorPos(SimmulatorWindowRect.Left + 30, SimmulatorWindowRect.Top + 30);
+
+        
+
+            Win32.SetActiveWindow((IntPtr) lblSimmulatorWindow);
+            Win32.SetFocus((IntPtr)lblSimmulatorWindow);
+            Win32.SetForegroundWindow((IntPtr)lblSimmulatorWindow);
+
+
+            Win32.MouseLeftClick(new System.Drawing.Point(SimmulatorWindowRect.Left + 30, SimmulatorWindowRect.Top + 30), lblSimmulatorWindow);
+
+           // Win32.SendMessage(lblSimmulatorWindow,Win32.WM_LBUTTONDOWN,Win32.MK_LBUTTON,
+
+            //SendMessage(hWnd, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(mousePosX, mousePosY));
+
+            //Win32.SendMessage(lblSimmulatorWindow, 0x0201, 0x00000001, 0x00100011);
+            //Win32.SendMessage(lblSimmulatorWindow, 0x0202, 0x00000000, 0x00100010);
+
+
+            // SetForegroundWindow((Int32) lblSimmulatorWindow);
+
+
+
+            //symulacja klikniecia
+            //Win32.SendMessage(lblSimmulatorWindow, 0x0201, 0x00000001, 0x00100011);
+            //Win32.SendMessage(lblSimmulatorWindow, 0x0202, 0x00000000, 0x00100010);
+
+
+            // Win32.SetForegroundWindowNative((IntPtr)lblSimmulatorWindow);
+
+            //Win32.SendMessage(lblSimmulatorWindow, 0x0201, 0x00000001, 0x00100011);
+            //Win32.SendMessage(lblSimmulatorWindow, 0x0202, 0x00000000, 0x00100010);
+
+
+            //Win32.SendMessage(lblAppnameWindow,Win32.WM_ACTIVATEAPP, 0x00000000, 0x000053d8);
+
+
+
+
+            //Win32.SendMessage(lblAppnameWindow, Win32.WM_WINDOWPOSCHANGING, 0x00000000, 0x0040a850);
+            //Win32.SendMessage(lblAppnameWindow, Win32.WM_WINDOWPOSCHANGED, 0x00000000, 0x0040a84c);
+            //Win32.SendMessage(lblAppnameWindow, Win32.WM_ACTIVATEAPP, 0x00000001, 0x00000000);
+            //Win32.SendMessage(lblAppnameWindow, Win32.WM_ACTIVATEAPP, 0x00000001, 0x00000000);
+            //Win32.SendMessage(lblAppnameWindow, Win32.WM_ACTIVATEAPP, 0x00000000, 0x000053d8);
+
+
+            /* for (int i = 0; i < 200; i++)
+             {
+                 var Dialog = Win32.FindWindow("Qt5QWindowIcon", "Dialog");
+                 var recWidgetWindow = Win32.FindWindowEx(Dialog, 0, "Qt5QWindowIcon", "recWidgetWindow");
+                 var btnRecStartPauseWindow = Win32.FindWindowEx(recWidgetWindow, 0, "Qt5QWindowIcon", "btnRecStartPauseWindow");
+
+                 Win32.SendMessage(btnRecStartPauseWindow, 0x0201, 0x00000001, 0x00100011);
+                 Win32.SendMessage(btnRecStartPauseWindow, 0x0202, 0x00000000, 0x00100010);
+
+                 System.Threading.Thread.Sleep(200);
+
+                 Panelsterowania = Win32.FindWindow("Qt5QWindowIcon", "Panel sterowania");
+
+                 if (Panelsterowania != 0)
+                     break;
+             }
+
+             var qt_msgbox_buttonboxWindow = Win32.FindWindowEx(Panelsterowania, 0, "Qt5QWindowIcon", "qt_msgbox_buttonboxWindow");
+
+             var QPushButtonClassWindow = Win32.FindWindowEx(qt_msgbox_buttonboxWindow, 0, "Qt5QWindowIcon", "QPushButtonClassWindow");
+
+             Win32.SendMessage(QPushButtonClassWindow, 0x0201, 0x00000001, 0x00100011);
+             Win32.SendMessage(QPushButtonClassWindow, 0x0202, 0x00000000, 0x00100010);*/
+        }
+
 
     }
 }
