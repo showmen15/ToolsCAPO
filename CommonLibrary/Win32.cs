@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace TaskRunner
+namespace CommonLibrary
 {
     /// <summary>
     /// Summary description for Win32.

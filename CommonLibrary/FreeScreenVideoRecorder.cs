@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommonLibrary;
 
-namespace TaskRunner
+namespace CommonLibrary
 {
     public class FreeScreenVideoRecorder
     {
