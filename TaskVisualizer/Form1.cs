@@ -173,7 +173,7 @@ namespace TaskVisualizer
                     cmd.Parameters.AddWithValue("@ID_Case", task.ID_Case);
                     cmd.Parameters.AddWithValue("@ID_Trials", task.ID_Trials);
 
-                    cmd.ExecuteNonQuery()
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

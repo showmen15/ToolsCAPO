@@ -72,7 +72,7 @@ namespace TaskRunner
                         process = new Process();
 
                         process.StartInfo.FileName = "java.exe";
-                        process.StartInfo.Arguments = string.Format(" -jar {0} {1} {2}", exeFilePath, item.ID_Case.ToString(), item.ID_Program);
+                        process.StartInfo.Arguments = string.Format(" -jar {0} {1}", exeFilePath, item.ID_Case.ToString());
 
                         process.StartInfo.UseShellExecute = false;
                         process.StartInfo.CreateNoWindow = true;
@@ -125,7 +125,7 @@ namespace TaskRunner
                             break;
 
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         clearProcess();
                         clearVisualizer();
