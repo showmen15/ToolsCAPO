@@ -1,0 +1,127 @@
+{
+  "name": "",
+  "timeout": 0,
+  "walls": [
+    {
+      "type": "wall",
+      "id": "Wall21",
+      "width": 0.1,
+      "height": 0.3,
+      "color": "ff000000",
+      "from": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "to": {
+        "x": 7.0,
+        "y": 0.0
+      }
+    },
+    {
+      "type": "wall",
+      "id": "Wall22",
+      "width": 0.1,
+      "height": 0.3,
+      "color": "ff000000",
+      "from": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "to": {
+        "x": 0.0,
+        "y": 5.0
+      }
+    },
+    {
+      "type": "wall",
+      "id": "Wall23",
+      "width": 0.1,
+      "height": 0.3,
+      "color": "ff000000",
+      "from": {
+        "x": 0.0,
+        "y": 5.0
+      },
+      "to": {
+        "x": 7.0,
+        "y": 5.0
+      }
+    },
+    {
+      "type": "wall",
+      "id": "Wall24",
+      "width": 0.1,
+      "height": 0.3,
+      "color": "ff000000",
+      "from": {
+        "x": 7.0,
+        "y": 0.0
+      },
+      "to": {
+        "x": 7.0,
+        "y": 5.0
+      }
+    }
+  ],
+  "gates": [],
+  "spaces": [
+    {
+      "type": "space",
+      "id": "Space25",
+      "kind": "room",
+      "name": null,
+      "function": null,
+      "expectedPersonCount": 18,
+      "area": 25.0,
+      "diameter": 7.0710678118654755,
+      "searched": 0
+    }
+  ],
+  "nodes": [
+    {
+      "type": "node",
+      "id": "Node26",
+      "kind": "spaceNode",
+      "position": {
+        "x": 2.5000000000000004,
+        "y": 2.5000000000000004
+      }
+    }
+  ],
+  "robots": [],
+  "victims": [],
+  "space-walls": [
+    {
+      "type": "space-wall",
+      "spaceId": "Space25",
+      "wallId": "Wall21"
+    },
+    {
+      "type": "space-wall",
+      "spaceId": "Space25",
+      "wallId": "Wall22"
+    },
+    {
+      "type": "space-wall",
+      "spaceId": "Space25",
+      "wallId": "Wall23"
+    },
+    {
+      "type": "space-wall",
+      "spaceId": "Space25",
+      "wallId": "Wall24"
+    }
+  ],
+  "space-gates": [],
+  "space-nodes": [
+    {
+      "type": "space-node",
+      "spaceId": "Space25",
+      "nodeId": "Node26"
+    }
+  ],
+  "space-robots": [],
+  "space-victims": [],
+  "gate-nodes": [],
+  "node-nodes": []
+}

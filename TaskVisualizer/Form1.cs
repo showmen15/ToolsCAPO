@@ -1,17 +1,11 @@
-﻿using System;
+﻿using CommonLibrary;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CommonLibrary;
-using CommonLibrary;
-using System.Data.SqlClient;
-using System.Runtime.InteropServices;
 
 namespace TaskVisualizer
 {
@@ -45,35 +39,42 @@ namespace TaskVisualizer
 
             foreach (VisualizerConfig item in taskList)
             {
-                recorder.StartRecord();
-
-                exeFilePath = @".\Visualizer\OfflineVisualizer.jar";
-
-                visualizer = new Process();
-
-                visualizer.StartInfo.FileName = "java.exe";
-                visualizer.StartInfo.Arguments = string.Format(" -jar {0} {1} {2}", exeFilePath, item.ID_Case.ToString(), item.ID_Trials.ToString());
-
-                visualizer.StartInfo.UseShellExecute = false;
-                visualizer.StartInfo.CreateNoWindow = true;
-                // process.StartInfo.RedirectStandardOutput = true;
-                // process.StartInfo.RedirectStandardError = true;
-                visualizer.Start();
-
                 try
                 {
-                    visualizer.WaitForExit();
+                    recorder.StartRecord();
+
+                    exeFilePath = @".\Visualizer\OfflineVisualizer.jar";
+
+                    visualizer = new Process();
+
+                    visualizer.StartInfo.FileName = "java.exe";
+                    visualizer.StartInfo.Arguments = string.Format(" -jar {0} {1} {2}", exeFilePath, item.ID_Case.ToString(), item.ID_Trials.ToString());
+
+                    visualizer.StartInfo.UseShellExecute = false;
+                    visualizer.StartInfo.CreateNoWindow = true;
+                    // process.StartInfo.RedirectStandardOutput = true;
+                    // process.StartInfo.RedirectStandardError = true;
+                    visualizer.Start();
+
+                    try
+                    {
+                        visualizer.WaitForExit();
+                    }
+                    catch (Exception)
+                    {
+                        clearProcess();
+                    }
+
+                    recorder.StopRecord();
+                    recorder.RenameRecordedFileVisualizer(item);
+                    setVisualizerConfigAsDone(item);
+
+                    visualizer = null;
                 }
-                catch (Exception)
+                catch(Exception ex)
                 {
-                    //clearProcess();
+
                 }
-
-                recorder.StopRecord();
-                recorder.RenameRecordedFileVisualizer(item);
-                setVisualizerConfigAsDone(item);
-
-                visualizer = null;
             }
 
             butStop.Invoke(new Action(delegate ()
@@ -137,13 +138,21 @@ namespace TaskVisualizer
 
                 using (SqlCommand cmd = new SqlCommand("", con))
                 {
-                    cmd.CommandText = "select ID_Case,ID_Trials,Name from dbo.TaskVisualizerList";
+                    cmd.CommandText = @"select t.ID_Case,t.ID_Trials,t.Name,a.Name_Case,a.Name_Config,a.Name_Map,a.Name_Program, 
+                                        (SELECT TOP 1 IdGlobal FROM Result r WHERE r.ID_Case = t.ID_Case AND r.ID_Trials = t.ID_Trials) AS IdGlobal
+                                        from dbo.TaskVisualizerList t INNER JOIN dbo.TasksAll a ON t.ID_Case = a.ID_Case AND t.ID_Trials = a.ID_Trials   WHERE VisualizeCompleted = 0";
 
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
                         {
-                            VisualizerConfig temp = new VisualizerConfig((int)rdr["ID_Case"], (int)rdr["ID_Trials"], rdr["Name"].ToString());
+                            VisualizerConfig temp = new VisualizerConfig((int)rdr["ID_Case"], (int)rdr["ID_Trials"], rdr["Name"].ToString(),
+                                (string)rdr["Name_Case"],
+                                 (string)rdr["Name_Config"],
+                                 (string)rdr["Name_Map"],
+                                 (string)rdr["Name_Program"],
+                                 (string)rdr["IdGlobal"]);
+
                             tasks.Add(temp);
                         }
                     }
@@ -168,7 +177,7 @@ namespace TaskVisualizer
 
                 using (SqlCommand cmd = new SqlCommand("", con))
                 {
-                    cmd.CommandText = "update dbo.TaskVisualizer SET  VisualizeCompleted = 1 WHERE ID_Case = @ID_Case  AND ID_Trials = @ID_Trials ";
+                    cmd.CommandText = "update dbo.TaskVisualizerList SET  VisualizeCompleted = 1 WHERE ID_Case = @ID_Case  AND ID_Trials = @ID_Trials ";
 
                     cmd.Parameters.AddWithValue("@ID_Case", task.ID_Case);
                     cmd.Parameters.AddWithValue("@ID_Trials", task.ID_Trials);

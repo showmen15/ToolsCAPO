@@ -24,6 +24,11 @@ namespace CommonLibrary
 
         public FreeScreenVideoRecorder()
         {
+            clearDirecotry();
+        }
+
+        private void clearDirecotry()
+        {
             if (System.IO.File.Exists(movieDirectoryInput))
             {
 
@@ -35,7 +40,6 @@ namespace CommonLibrary
                     System.IO.File.Delete(taskFiles[i].FullName);
             }
         }
-
 
         public void init()
         {
@@ -86,8 +90,42 @@ namespace CommonLibrary
 
         public void RenameRecordedFileVisualizer(VisualizerConfig item)
         {
+            string sInputFile = Directory.GetFiles(movieDirectoryInput)[0];
 
-            throw new NotImplementedException();
+            string sNewFileName = string.Format("{0}_{1}_{2}.mp4", item.Name_Program, item.Name_Map, item.Name_Config);
+            string sFileOutputDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, item.Name_Map);
+
+            if (!System.IO.File.Exists(sFileOutputDirectory))
+                System.IO.Directory.CreateDirectory(sFileOutputDirectory);
+
+            string sFileMovePath = string.Format("{0}\\{1}", sFileOutputDirectory, sNewFileName);
+
+            System.IO.File.Move(sInputFile, sFileMovePath);
+
+
+
+            //for (int j = 0; j < 300; j++)
+            //{
+            //    DirectoryInfo taskDirectory = new DirectoryInfo(movieDirectoryInput);
+            //    FileInfo[] taskFiles = taskDirectory.GetFiles("*");
+
+            //    if (taskFiles.Length > 0)
+            //    {
+            //        System.IO.File.Move(taskFiles[0].FullName, sNewFileDirectory);
+
+            //        for (int i = 1; i < taskFiles.Length; i++)
+            //            System.IO.File.Delete(taskFiles[i].FullName);
+            //        break;
+            //    }
+
+            //    System.Threading.Thread.Sleep(200);
+            //}
+
+
+
+            //string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
+
+            //throw new NotImplementedException();
         /*    if (isWrongInit)
                 return;
 
@@ -104,9 +142,10 @@ namespace CommonLibrary
 
         public void StartRecord()
         {
-            //Start nagrania 
+            clearDirecotry();
+             //Start nagrania 
 
-            Int32 lblAppnameWindow = Win32.FindWindow("Qt5QWindowIcon", "FreeScreenVideoRecorder");
+             Int32 lblAppnameWindow = Win32.FindWindow("Qt5QWindowIcon", "FreeScreenVideoRecorder");
 
             if (lblAppnameWindow == 0)
             {
