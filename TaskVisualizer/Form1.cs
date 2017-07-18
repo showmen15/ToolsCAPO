@@ -18,6 +18,7 @@ namespace TaskVisualizer
         FreeScreenVideoRecorder recorder = new FreeScreenVideoRecorder();
 
         bool StopWork;
+        bool SkipWork;
         Process visualizer;
 
         private int Timeout;
@@ -26,7 +27,7 @@ namespace TaskVisualizer
         {
             InitializeComponent();
             timerToEnd.Stop();
-            txtServerName.SelectedIndex = 0;
+            txtServerName.SelectedIndex = 1;
         }
 
 
@@ -39,6 +40,11 @@ namespace TaskVisualizer
 
             foreach (VisualizerConfig item in taskList)
             {
+                if (StopWork)
+                    return;
+
+                SkipWork = false;
+
                 try
                 {
                     recorder.StartRecord();
@@ -56,19 +62,18 @@ namespace TaskVisualizer
                     // process.StartInfo.RedirectStandardError = true;
                     visualizer.Start();
 
-                    try
-                    {
-                        visualizer.WaitForExit();
-                    }
-                    catch (Exception)
-                    {
-                        clearProcess();
-                    }
+                    visualizer.WaitForExit();
 
                     recorder.StopRecord();
-                    recorder.RenameRecordedFileVisualizer(item);
-                    setVisualizerConfigAsDone(item);
 
+                    if (!StopWork)
+                    {
+                        recorder.RenameRecordedFileVisualizer(item);
+
+                        if (!SkipWork)
+                            setVisualizerConfigAsDone(item);
+
+                    }
                     visualizer = null;
                 }
                 catch(Exception ex)
@@ -117,6 +122,7 @@ namespace TaskVisualizer
 
         private void butSkipNext_Click(object sender, EventArgs e)
         {
+            SkipWork = true;
             clearProcess();
         }
 
@@ -140,7 +146,7 @@ namespace TaskVisualizer
                 {
                     cmd.CommandText = @"select t.ID_Case,t.ID_Trials,t.Name,a.Name_Case,a.Name_Config,a.Name_Map,a.Name_Program, 
                                         (SELECT TOP 1 IdGlobal FROM Result r WHERE r.ID_Case = t.ID_Case AND r.ID_Trials = t.ID_Trials) AS IdGlobal
-                                        from dbo.TaskVisualizerList t INNER JOIN dbo.TasksAll a ON t.ID_Case = a.ID_Case AND t.ID_Trials = a.ID_Trials   WHERE VisualizeCompleted = 0";
+                                        from dbo.TaskVisualizerList t INNER JOIN dbo.TasksAll a ON t.ID_Case = a.ID_Case AND t.ID_Trials = a.ID_Trials   WHERE VisualizeCompleted = 0 order by t.ID_Case,t.ID_Trials";
 
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {

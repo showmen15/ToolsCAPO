@@ -29,7 +29,8 @@ namespace CommonLibrary
 
         private void clearDirecotry()
         {
-            if (System.IO.File.Exists(movieDirectoryInput))
+
+            if (System.IO.Directory.Exists(movieDirectoryInput))
             {
 
 
@@ -90,19 +91,54 @@ namespace CommonLibrary
 
         public void RenameRecordedFileVisualizer(VisualizerConfig item)
         {
-            string sInputFile = Directory.GetFiles(movieDirectoryInput)[0];
+            if (isWrongInit)
+                return;
 
-            string sNewFileName = string.Format("{0}_{1}_{2}.mp4", item.Name_Program, item.Name_Map, item.Name_Config);
-            string sFileOutputDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, item.Name_Map);
+            bool isMoving = true;
 
-            if (!System.IO.File.Exists(sFileOutputDirectory))
-                System.IO.Directory.CreateDirectory(sFileOutputDirectory);
+            do
+            {
 
-            string sFileMovePath = string.Format("{0}\\{1}", sFileOutputDirectory, sNewFileName);
+                string[] sDircotryList = Directory.GetFiles(movieDirectoryInput);
 
-            System.IO.File.Move(sInputFile, sFileMovePath);
+                if (sDircotryList != null && (sDircotryList.Length > 0))
+                {
+                    string sInputFile = sDircotryList[0];
 
+                    string sNewFileName = string.Format("{0}_{1}_{2}.mp4", item.Name_Program, item.Name_Map, item.Name_Config);
+                    string sFileOutputDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, item.Name_Map);
 
+                    if (!System.IO.File.Exists(sFileOutputDirectory))
+                        System.IO.Directory.CreateDirectory(sFileOutputDirectory);
+
+                    string sFileMovePath = string.Format("{0}\\{1}", sFileOutputDirectory, sNewFileName);
+
+                    System.IO.File.Move(sInputFile, sFileMovePath);
+
+                    isMoving = false;
+                    /*for (int j = 0; j < 300; j++)
+                    {
+                        DirectoryInfo taskDirectory = new DirectoryInfo(movieDirectoryInput);
+                        FileInfo[] taskFiles = taskDirectory.GetFiles("*");
+
+                        if (taskFiles.Length > 0)
+                        {
+                            System.IO.File.Move(sInputFile, sFileMovePath);
+
+                            for (int i = 1; i < taskFiles.Length; i++)
+                                System.IO.File.Delete(taskFiles[i].FullName);
+                            break;
+                        }
+
+                        System.Threading.Thread.Sleep(200);
+                    }*/
+
+                }
+                else
+                    System.Threading.Thread.Sleep(100);
+
+            }
+            while (isMoving);
 
             //for (int j = 0; j < 300; j++)
             //{
@@ -126,17 +162,17 @@ namespace CommonLibrary
             //string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
 
             //throw new NotImplementedException();
-        /*    if (isWrongInit)
-                return;
+            /*    if (isWrongInit)
+                    return;
 
-            string sNewFileName = string.Format("{0}_{1}_{2}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config);
-            string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
+                string sNewFileName = string.Format("{0}_{1}_{2}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config);
+                string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
 
-            if (System.IO.File.Exists(sNewFileDirectory))
-            {
-                sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config, DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss"));
-                sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
-            }*/
+                if (System.IO.File.Exists(sNewFileDirectory))
+                {
+                    sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config, DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss"));
+                    sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
+                }*/
 
         }
 
