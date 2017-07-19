@@ -98,7 +98,6 @@ namespace CommonLibrary
 
             do
             {
-
                 string[] sDircotryList = Directory.GetFiles(movieDirectoryInput);
 
                 if (sDircotryList != null && (sDircotryList.Length > 0))
@@ -113,67 +112,18 @@ namespace CommonLibrary
 
                     string sFileMovePath = string.Format("{0}\\{1}", sFileOutputDirectory, sNewFileName);
 
+                    if (System.IO.File.Exists(sFileMovePath))
+                        System.IO.File.Delete(sFileMovePath);
+
                     System.IO.File.Move(sInputFile, sFileMovePath);
 
                     isMoving = false;
-                    /*for (int j = 0; j < 300; j++)
-                    {
-                        DirectoryInfo taskDirectory = new DirectoryInfo(movieDirectoryInput);
-                        FileInfo[] taskFiles = taskDirectory.GetFiles("*");
-
-                        if (taskFiles.Length > 0)
-                        {
-                            System.IO.File.Move(sInputFile, sFileMovePath);
-
-                            for (int i = 1; i < taskFiles.Length; i++)
-                                System.IO.File.Delete(taskFiles[i].FullName);
-                            break;
-                        }
-
-                        System.Threading.Thread.Sleep(200);
-                    }*/
-
                 }
                 else
                     System.Threading.Thread.Sleep(100);
 
             }
             while (isMoving);
-
-            //for (int j = 0; j < 300; j++)
-            //{
-            //    DirectoryInfo taskDirectory = new DirectoryInfo(movieDirectoryInput);
-            //    FileInfo[] taskFiles = taskDirectory.GetFiles("*");
-
-            //    if (taskFiles.Length > 0)
-            //    {
-            //        System.IO.File.Move(taskFiles[0].FullName, sNewFileDirectory);
-
-            //        for (int i = 1; i < taskFiles.Length; i++)
-            //            System.IO.File.Delete(taskFiles[i].FullName);
-            //        break;
-            //    }
-
-            //    System.Threading.Thread.Sleep(200);
-            //}
-
-
-
-            //string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
-
-            //throw new NotImplementedException();
-            /*    if (isWrongInit)
-                    return;
-
-                string sNewFileName = string.Format("{0}_{1}_{2}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config);
-                string sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
-
-                if (System.IO.File.Exists(sNewFileDirectory))
-                {
-                    sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", conf.Name_Program, conf.Name_Map, conf.Name_Config, DateTime.Now.ToString("yyyy_MM_dd_hh_mm_ss"));
-                    sNewFileDirectory = string.Format("{0}\\{1}", movieDirectoryOutput, sNewFileName);
-                }*/
-
         }
 
         public void StartRecord()

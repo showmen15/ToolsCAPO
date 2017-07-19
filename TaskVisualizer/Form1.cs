@@ -6,47 +6,53 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SQLLibrary;
+using System.IO;
 
 namespace TaskVisualizer
 {
     public partial class Form1 : Form
     {
-        //Process visualizer;
+        #region  :: TaskVisualizer ::
+
+        bool Working;
+        bool Skip;
 
         Task runnerTask;
         List<VisualizerConfig> taskList = new List<VisualizerConfig>();
         FreeScreenVideoRecorder recorder = new FreeScreenVideoRecorder();
 
-        bool StopWork;
-        bool SkipWork;
         Process visualizer;
-
-        private int Timeout;
 
         public Form1()
         {
             InitializeComponent();
-            timerToEnd.Stop();
-            txtServerName.SelectedIndex = 1;
+
+            timerRecorderWorking.Stop();
+            txtServerName.SelectedIndex = 0;
         }
 
+        private void initDB(string sServerName, string sUser, string sPass)
+        {
+            SQL.ConnectionString = string.Format("data source={0};initial catalog=Doktorat; User Id={1}; Password={2};", sServerName, sUser, sPass);
+        }
 
         private void run()
         {
             string exeFilePath;
             visualizer = null;
 
-            taskList = getVisualizerConfig();
+            taskList = SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
 
             foreach (VisualizerConfig item in taskList)
             {
-                if (StopWork)
-                    return;
-
-                SkipWork = false;
-
                 try
                 {
+                    lblCaseName.Invoke(new Action(delegate ()
+                    {
+                        lblCaseName.Text = String.Format("CaseID: {0}, CaseName: {1}, Program: {2}, Trials: {3}", item.ID_Case, item.Name_Case, item.Name_Program, item.ID_Trials);
+                    }));
+
                     recorder.StartRecord();
 
                     exeFilePath = @".\Visualizer\OfflineVisualizer.jar";
@@ -60,25 +66,26 @@ namespace TaskVisualizer
                     visualizer.StartInfo.CreateNoWindow = true;
                     // process.StartInfo.RedirectStandardOutput = true;
                     // process.StartInfo.RedirectStandardError = true;
+
                     visualizer.Start();
 
                     visualizer.WaitForExit();
 
                     recorder.StopRecord();
 
-                    if (!StopWork)
+                    if (Working && Skip)
+                        Skip = false;
+                    else if (Working && !Skip)
                     {
                         recorder.RenameRecordedFileVisualizer(item);
-
-                        if (!SkipWork)
-                            setVisualizerConfigAsDone(item);
-
+                        SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
-                    visualizer = null;
+                    else
+                        return;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-
+                    closeVisualizer();
                 }
             }
 
@@ -90,145 +97,132 @@ namespace TaskVisualizer
 
         private void butRun_Click(object sender, EventArgs e)
         {
+            Working = true;
+            Skip = false;
+
             runnerTask = new Task(new Action(run));
-
             runnerTask.Start();
+            timerRecorderWorking.Start();
 
-            butStop.Enabled = true;
             butRun.Enabled = false;
-            StopWork = false;
+            butStop.Enabled = true;
+            butSkipNext.Enabled = true;
         }
 
         private void butStop_Click(object sender, EventArgs e)
         {
-            try
-            {
-                StopWork = true;
+            Working = false;
+            Skip = false;
 
-                butStop.Enabled = false;
-                butRun.Enabled = true;
+            closeVisualizer();
+            timerRecorderWorking.Stop();
 
-                timerToEnd.Stop();
-
-                if (visualizer != null)
-                    visualizer.Kill();
-            }
-            catch (Exception)
-            {
-                clearProcess();
-                timerToEnd.Stop();
-            }
+            butRun.Enabled = true;
+            butStop.Enabled = false;
+            butSkipNext.Enabled = false;
         }
 
         private void butSkipNext_Click(object sender, EventArgs e)
         {
-            SkipWork = true;
-            clearProcess();
+            Skip = true;
+            closeVisualizer();
         }
 
-        private List<VisualizerConfig> getVisualizerConfig()
+        private void closeVisualizer()
         {
-            List<VisualizerConfig> tasks = new List<VisualizerConfig>();
+            if (visualizer != null)
+                visualizer.Kill();
 
-            string sConnectionString = string.Empty;
-
-            txtServerName.Invoke(new Action(delegate ()
-            {
-                sConnectionString = string.Format("Server={0};Database=Doktorat;User Id={1};Password={2};", txtServerName.Text, txtUser.Text, txtPassword.Text);
-            }));
-
-
-            using (SqlConnection con = new SqlConnection(sConnectionString))
-            {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("", con))
-                {
-                    cmd.CommandText = @"select t.ID_Case,t.ID_Trials,t.Name,a.Name_Case,a.Name_Config,a.Name_Map,a.Name_Program, 
-                                        (SELECT TOP 1 IdGlobal FROM Result r WHERE r.ID_Case = t.ID_Case AND r.ID_Trials = t.ID_Trials) AS IdGlobal
-                                        from dbo.TaskVisualizerList t INNER JOIN dbo.TasksAll a ON t.ID_Case = a.ID_Case AND t.ID_Trials = a.ID_Trials   WHERE VisualizeCompleted = 0 order by t.ID_Case,t.ID_Trials";
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            VisualizerConfig temp = new VisualizerConfig((int)rdr["ID_Case"], (int)rdr["ID_Trials"], rdr["Name"].ToString(),
-                                (string)rdr["Name_Case"],
-                                 (string)rdr["Name_Config"],
-                                 (string)rdr["Name_Map"],
-                                 (string)rdr["Name_Program"],
-                                 (string)rdr["IdGlobal"]);
-
-                            tasks.Add(temp);
-                        }
-                    }
-                }
-            }
-
-            return tasks;
+            visualizer = null;
         }
 
-        private void setVisualizerConfigAsDone(VisualizerConfig task)
-        {
-            string sConnectionString = string.Empty;
-
-            txtServerName.Invoke(new Action(delegate ()
-            {
-                sConnectionString = string.Format("Server={0};Database=Doktorat;User Id={1};Password={2};", txtServerName.Text, txtUser.Text, txtPassword.Text);
-            }));
-
-            using (SqlConnection con = new SqlConnection(sConnectionString))
-            {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("", con))
-                {
-                    cmd.CommandText = "update dbo.TaskVisualizerList SET  VisualizeCompleted = 1 WHERE ID_Case = @ID_Case  AND ID_Trials = @ID_Trials ";
-
-                    cmd.Parameters.AddWithValue("@ID_Case", task.ID_Case);
-                    cmd.Parameters.AddWithValue("@ID_Trials", task.ID_Trials);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-
-        private void timerToEnd_Tick(object sender, EventArgs e)
-        {
-            checkFreeScreenVideoRecorderWorking(Timeout);
-        }
-
-        private void clearProcess()
-        {
-            try
-            {
-                if (visualizer != null)
-                {
-                    visualizer.Kill();
-                    visualizer = null;
-                }
-            }
-            catch
-            {
-                visualizer = null;
-            }
-        }
-
-        [DllImport("kernel32.dll", EntryPoint = "Beep", SetLastError = true,
-    ExactSpelling = true)]
+        [DllImport("kernel32.dll", EntryPoint = "Beep", SetLastError = true, ExactSpelling = true)]
         public static extern bool Beep(uint frequency, uint duration);
 
-        private void button1_Click(object sender, EventArgs e)
+        private void checkFreeScreenVideoRecorderWorking()
         {
-            Beep(2500, 1000);
-            //  checkFreeScreenVideoRecorderWorking(-1);
+            if (recorder.IsNotWorking())
+                Beep(2500, 1000);
         }
 
-        private void checkFreeScreenVideoRecorderWorking(int Timeout)
+        private void txtServerName_SelectedIndexChanged(object sender, EventArgs e)
         {
-                if (recorder.IsNotWorking())
-                    Beep(2500, 1000);
+            initDB(txtServerName.Text, txtUser.Text, txtPassword.Text);
         }
+
+        private void timerRecorderWorking_Tick(object sender, EventArgs e)
+        {
+            checkFreeScreenVideoRecorderWorking();
+        }
+
+        private void butBeep_Click(object sender, EventArgs e)
+        {
+            Beep(2500, 1000);
+        }
+
+        #endregion
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            List<string> arrHeaders = new List<string>();
+
+            Shell32.Shell shell = new Shell32.Shell();
+
+
+            Shell32.Folder objFolder;
+
+            objFolder = shell.NameSpace(@"\\dsview.pcoip.ki.agh.edu.pl\Biblioteki-Pracownicy$\szsz\Desktop\Robot_2017_06_14_15_44_24.avi");
+
+            for (int i = 0; i < short.MaxValue; i++)
+            {
+                string header = objFolder.GetDetailsOf(null, i);
+                if (String.IsNullOrEmpty(header))
+                    break;
+                arrHeaders.Add(header);
+            }
+
+            foreach (Shell32.FolderItem2 item in objFolder.Items())
+            {
+                for (int i = 0; i < arrHeaders.Count; i++)
+                {
+                    Console.WriteLine("{ 0}\t{1}: {2}", i, arrHeaders[i], objFolder.GetDetailsOf(item, i));
+                }
+            }
+
+
+
+            string strFilename = @"\\dsview.pcoip.ki.agh.edu.pl\Biblioteki-Pracownicy$\szsz\Desktop\Robot_2017_06_14_15_44_24.avi";
+            FileInfo oFileInfo = new FileInfo(strFilename);
+
+            //FileStream stream3 = new FileStream("image2.tif", FileMode.Create);
+            //BitmapMetadata myBitmapMetadata = new BitmapMetadata("tiff");
+            //TiffBitmapEncoder encoder3 = new TiffBitmapEncoder();
+            //myBitmapMetadata.ApplicationName = "Microsoft Digital Image Suite 10";
+            //myBitmapMetadata.Author = new ReadOnlyCollection<string>(
+            //    new List<string>() { "Lori Kane" });
+            //myBitmapMetadata.CameraManufacturer = "Tailspin Toys";
+            //myBitmapMetadata.CameraModel = "TT23";
+            //myBitmapMetadata.Comment = "Nice Picture";
+            //myBitmapMetadata.Copyright = "2010";
+            //myBitmapMetadata.DateTaken = "5/23/2010";
+            //myBitmapMetadata.Keywords = new ReadOnlyCollection<string>(
+            //    new List<string>() { "Lori", "Kane" });
+            //myBitmapMetadata.Rating = 5;
+            //myBitmapMetadata.Subject = "Lori";
+            //myBitmapMetadata.Title = "Lori's photo";
+
+            //// Create a new frame that is identical to the one 
+            //// from the original image, except for the new metadata. 
+            //encoder3.Frames.Add(
+            //    BitmapFrame.Create(
+            //    decoder2.Frames[0],
+            //    decoder2.Frames[0].Thumbnail,
+            //    myBitmapMetadata,
+            //    decoder2.Frames[0].ColorContexts));
+
+            //encoder3.Save(stream3);
+            //stream3.Close();
+        }
+
     }
 }
