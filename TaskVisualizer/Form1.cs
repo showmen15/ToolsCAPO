@@ -81,18 +81,20 @@ namespace TaskVisualizer
                         SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
                     else
+                    {
+                        butStop.Invoke(new Action(delegate ()
+                        {
+                            butStop.PerformClick();
+                        }));
+
                         return;
+                    }
                 }
                 catch (Exception ex)
                 {
                     closeVisualizer();
                 }
-            }
-
-            butStop.Invoke(new Action(delegate ()
-            {
-                butStop.PerformClick();
-            }));
+            }    
         }
 
         private void butRun_Click(object sender, EventArgs e)
