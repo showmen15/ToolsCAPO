@@ -105,7 +105,7 @@ namespace CommonLibrary
                     string sInputFile = sDircotryList[0];
 
                     string sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4",item.Name_Map, item.Name_Program, item.Name_Config,item.ID_Trials);
-                    string sFileOutputDirectory = string.Format("{0}\\{1}\\{2}\\{3}\\{4}", movieDirectoryOutput, item.Name_Map, item.Name_Program, item.Name_Config);
+                    string sFileOutputDirectory = string.Format("{0}\\{1}\\{2}\\{3}", movieDirectoryOutput, item.Name_Map, item.Name_Program, item.Name_Config);
 
                     if (!System.IO.File.Exists(sFileOutputDirectory))
                         System.IO.Directory.CreateDirectory(sFileOutputDirectory);
