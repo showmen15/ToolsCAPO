@@ -292,7 +292,7 @@ namespace CommonLibrary
 
             //Start nagrania 
 
-            Int32 lblAppnameWindow = Win32.FindWindow("Qt5QWindowIcon", "FreeScreenVideoRecorder");
+           Int32 lblAppnameWindow = Win32.FindWindow("Qt5QWindowIcon", "FreeScreenVideoRecorder");
 
             if (lblAppnameWindow == 0)
             {
@@ -313,25 +313,53 @@ namespace CommonLibrary
             Int32 Panelsterowania = 0;
 
 
-            //System.Threading.Thread.Sleep(400);
+           // System.Threading.Thread.Sleep(400);
+            
 
-            int lblSimmulatorWindow = Win32.FindWindow("Notepad", "Bez tytułu — Notatnik");
+
+            int lblSimmulatorWindow = Win32.FindWindow("WindowsForms10.Window.8.app.0.141b42a_r15_ad1", "Form1");
 
             Win32.Rect SimmulatorWindowRect = new Win32.Rect();
             Win32.GetWindowRect((IntPtr) lblSimmulatorWindow, ref SimmulatorWindowRect);
 
             Win32.SetCursorPos(SimmulatorWindowRect.Left + 30, SimmulatorWindowRect.Top + 30);
 
-        
-
             Win32.SetActiveWindow((IntPtr) lblSimmulatorWindow);
             Win32.SetFocus((IntPtr)lblSimmulatorWindow);
             Win32.SetForegroundWindow((IntPtr)lblSimmulatorWindow);
+            Win32.MouseLeftClick(new System.Drawing.Point(SimmulatorWindowRect.Left + 30, SimmulatorWindowRect.Top + 30), lblSimmulatorWindow);
 
+
+
+
+            Win32.SetActiveWindow((IntPtr)lblSimmulatorWindow);
+            Win32.SetFocus((IntPtr)lblSimmulatorWindow);
+            Win32.SetForegroundWindow((IntPtr)lblSimmulatorWindow);
 
             Win32.MouseLeftClick(new System.Drawing.Point(SimmulatorWindowRect.Left + 30, SimmulatorWindowRect.Top + 30), lblSimmulatorWindow);
 
-           // Win32.SendMessage(lblSimmulatorWindow,Win32.WM_LBUTTONDOWN,Win32.MK_LBUTTON,
+
+
+            //WM_NCACTIVATE
+            Win32.SendMessage(lblSimmulatorWindow, Win32.WM_NCACTIVATE, 0, 0);
+               Win32.SendMessage(lblSimmulatorWindow,Win32.WM_GETTEXT, 0x000001FE, 0x002ADB9C);
+               Win32.SendMessage(lblSimmulatorWindow, Win32.WM_ACTIVATE, 0x0000000, 0x0000000);
+
+               Win32.SendMessage(lblSimmulatorWindow, Win32.WM_ACTIVATEAPP, 0x0000000, 0x00033D4);
+               Win32.SendMessage(lblSimmulatorWindow, Win32.WM_KILLFOCUS, 0x0000000, 0x0000000);
+
+               Win32.SendMessage(lblSimmulatorWindow, 281, 0x0000000, 0xC00000F);
+               Win32.SendMessage(lblSimmulatorWindow, 282, 0x0000001, 0x0000000);
+
+
+
+            Win32.SendMessage(lblAppnameWindow, Win32.WM_ACTIVATEAPP, 0x0000000, 0x0003D60);
+
+
+            Win32.SendMessage(lblAppnameWindow, Win32.WM_ACTIVATEAPP, 0x0000001, 0x0000000);
+            Win32.SendMessage(lblAppnameWindow, Win32.WM_ACTIVATEAPP, 0x0000000, 0x0002F0C);
+
+            // Win32.SendMessage(lblSimmulatorWindow,Win32.WM_LBUTTONDOWN,Win32.MK_LBUTTON,
 
             //SendMessage(hWnd, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(mousePosX, mousePosY));
 

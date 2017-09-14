@@ -39,6 +39,12 @@ namespace CommonLibrary
 
         public const int MK_LBUTTON = 0x0001;
 
+
+        public const int WM_NCACTIVATE = 0x0086;
+        public const int WM_GETTEXT = 0x000D;
+        public const int WM_ACTIVATE = 0x0006;
+        public const int WM_KILLFOCUS = 0x0008;
+
         // The FindWindow function retrieves a handle to the top-level window whose class name
         // and window name match the specified strings. This function does not search child windows.
         // This function does not perform a case-sensitive search.
