@@ -18,6 +18,9 @@ namespace CommonLibrary
 
         // HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Screen Capturer Recorder_is1
 
+        //https://github.com/rdp/screen-capture-recorder-to-video-windows-free
+        //free screen recorder source
+
         private string movieDirectoryOutput = @"D:\NagraniaOutput";
 
         private string sFFmpegPath = @"C:\Program Files (x86)\Screen Capturer Recorder\configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe";
