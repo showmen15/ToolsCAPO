@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SQLLibrary;
 using System.IO;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace TaskVisualizer
 {
@@ -20,7 +22,8 @@ namespace TaskVisualizer
 
         Task runnerTask;
         List<VisualizerConfig> taskList = new List<VisualizerConfig>();
-        FreeScreenVideoRecorder recorder = new FreeScreenVideoRecorder();
+        //FreeScreenVideoRecorder recorder = new FreeScreenVideoRecorder();
+        ScreenCapturerRecorder recorder = new ScreenCapturerRecorder();
 
         Process visualizer;
 
@@ -34,7 +37,7 @@ namespace TaskVisualizer
 
         private void initDB(string sServerName, string sUser, string sPass)
         {
-            SQL.ConnectionString = string.Format("data source={0};initial catalog=Doktorat; User Id={1}; Password={2};", sServerName, sUser, sPass);
+            //SQL.ConnectionString = string.Format("data source={0};initial catalog=Doktorat; User Id={1}; Password={2};", sServerName, sUser, sPass);
         }
 
         private void run()
@@ -53,7 +56,7 @@ namespace TaskVisualizer
                         lblCaseName.Text = String.Format("CaseID: {0}, CaseName: {1}, Program: {2}, Trials: {3}", item.ID_Case, item.Name_Case, item.Name_Program, item.ID_Trials);
                     }));
 
-                    recorder.StartRecord();
+                    recorder.StartRecord(item);
 
                     exeFilePath = @".\Visualizer\OfflineVisualizer.jar";
 
@@ -77,7 +80,7 @@ namespace TaskVisualizer
                         Skip = false;
                     else if (Working && !Skip)
                     {
-                        recorder.RenameRecordedFileVisualizer(item);
+                       // recorder.RenameRecordedFileVisualizer(item);
                         SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
                     else
@@ -166,6 +169,19 @@ namespace TaskVisualizer
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+
+            string filePath = @"C:\Nowy\Robot_2017_06_14_15_44_24.avi";
+            var file = ShellFile.FromFilePath(filePath);
+
+            // Read and Write:
+
+            string[] oldAuthors = file.Properties.System.Author.Value;
+            string oldTitle = file.Properties.System.Title.Value;
+
+            file.Properties.System.Author.Value = new string[] { "Author #1", "Author #2" };
+            file.Properties.System.Title.Value = "Example Title";
+
+            /*
             List<string> arrHeaders = new List<string>();
 
             Shell32.Shell shell = new Shell32.Shell();
@@ -191,10 +207,10 @@ namespace TaskVisualizer
                 }
             }
 
-
+  
 
             string strFilename = @"\\dsview.pcoip.ki.agh.edu.pl\Biblioteki-Pracownicy$\szsz\Desktop\Robot_2017_06_14_15_44_24.avi";
-            FileInfo oFileInfo = new FileInfo(strFilename);
+            FileInfo oFileInfo = new FileInfo(strFilename);*/
 
             //FileStream stream3 = new FileStream("image2.tif", FileMode.Create);
             //BitmapMetadata myBitmapMetadata = new BitmapMetadata("tiff");

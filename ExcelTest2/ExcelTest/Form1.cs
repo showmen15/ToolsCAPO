@@ -333,5 +333,9 @@ namespace ExcelTest
             export.Save(@"D:\Desktop\Robot AGH\Tools\ExcelTest\csharp-Excel12.xls");
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

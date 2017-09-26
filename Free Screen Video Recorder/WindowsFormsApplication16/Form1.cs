@@ -72,5 +72,18 @@ namespace WindowsFormsApplication16
             FreeScreenVideoRecorder tt = new FreeScreenVideoRecorder();
             tt.RenameRecordedFile("");
         }
+
+        ScreenCapturerRecorder rec;
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            rec = new ScreenCapturerRecorder();
+            rec.StartRecord(@"C:\test\szsz/uuu.mp4");
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            rec.StopRecord();
+        }
     }
 }

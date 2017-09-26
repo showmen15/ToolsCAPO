@@ -46,6 +46,7 @@
     <Compile Include="Job.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunConfig.cs" />
+    <Compile Include="ScreenCapturerRecorder.cs" />
     <Compile Include="VisualizerConfig.cs" />
     <Compile Include="Win32.cs" />
   </ItemGroup>
