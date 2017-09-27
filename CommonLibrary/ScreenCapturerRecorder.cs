@@ -21,7 +21,7 @@ namespace CommonLibrary
         //https://github.com/rdp/screen-capture-recorder-to-video-windows-free
         //free screen recorder source
 
-        private string movieDirectoryOutput = @"D:\NagraniaOutput";
+        private string movieDirectoryOutput = @"C:\NagraniaOutput";
 
         private string sFFmpegPath = @"C:\Program Files (x86)\Screen Capturer Recorder\configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe";
         private string sConfiguration = @"-loglevel info   -f dshow  -video_device_number 0 -i video=""screen-capture-recorder""  -f dshow -audio_device_number 0 -i audio=""virtual-audio-capturer""  -filter_complex amix=inputs=1  -vcodec libx264 -g 30 -qp 10 -tune zerolatency -pix_fmt yuv420p  -preset ultrafast -vsync vfr -acodec libmp3lame  -f mp4";
@@ -35,7 +35,7 @@ namespace CommonLibrary
 
         private void init()
         { 
-            RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Screen Capturer Recorder_is1", false);
+            RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Screen Capturer Recorder_is1");
             sFFmpegPath = string.Format(@"{0}configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe",(String)myKey.GetValue("InstallLocation"));
         }
 
@@ -66,8 +66,12 @@ namespace CommonLibrary
 
         public void StopRecord()
         {
-            StopProgram(recorder);
+            if (recorder != null)
+            {
+                StopProgram(recorder);
 
+                recorder = null;
+            }
         }
 
         public void RenameRecordedFile(string sNewFile)
@@ -98,10 +102,12 @@ namespace CommonLibrary
 
         public bool IsNotWorking()
         {
-            if (recorder.HasExited)
+            return true;
+
+           /* if (recorder != null && recorder.HasExited)
                 return true;
             else
-                return false;
+                return false;*/
         }
 
 

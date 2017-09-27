@@ -37,7 +37,7 @@ namespace TaskVisualizer
 
         private void initDB(string sServerName, string sUser, string sPass)
         {
-            //SQL.ConnectionString = string.Format("data source={0};initial catalog=Doktorat; User Id={1}; Password={2};", sServerName, sUser, sPass);
+            SQL.ConnectionString = string.Format("data source={0};initial catalog=Doktorat; User Id={1}; Password={2};", sServerName, sUser, sPass);
         }
 
         private void run()
@@ -81,7 +81,7 @@ namespace TaskVisualizer
                     else if (Working && !Skip)
                     {
                        // recorder.RenameRecordedFileVisualizer(item);
-                        SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
+                        //SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
                     else
                     {
@@ -121,6 +121,8 @@ namespace TaskVisualizer
 
             closeVisualizer();
             timerRecorderWorking.Stop();
+
+            recorder.StopRecord();
 
             butRun.Enabled = true;
             butStop.Enabled = false;
