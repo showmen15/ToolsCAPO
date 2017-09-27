@@ -102,12 +102,12 @@ namespace CommonLibrary
 
         public bool IsNotWorking()
         {
-            return true;
+            //return true;
 
-           /* if (recorder != null && recorder.HasExited)
+           if (recorder != null && recorder.HasExited)
                 return true;
             else
-                return false;*/
+                return false;
         }
 
 
