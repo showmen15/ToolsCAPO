@@ -12,6 +12,22 @@ namespace ExcelTest
         public string[] DunnTest { get; set; }
         public string ChartPath { get; set; }
 
+        public int GetKwTestDF()
+        {
+            string[] split = KwTest[4].Split(',');
+            int value = int.Parse(split[1].Replace("df =", string.Empty));
+
+            return value;
+        }
+
+        public double GetKwchiSquared()
+        {
+            string[] split = KwTest[4].Split(',');
+            double value = double.Parse(split[0].Replace("Kruskal-Wallis chi-squared =", string.Empty).Replace(".",","));
+
+            return value;
+        }
+
         public string[] GetSplitTests
         {
             get

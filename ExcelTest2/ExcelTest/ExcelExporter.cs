@@ -341,7 +341,10 @@ namespace ExcelTest
         {
             targetSheet.get_Range(Cell, Cell).set_Value(XlRangeValueDataType.xlRangeValueDefault,Value);
         }
-      
 
+        public void ExportDataPDF(string sOutputPdfFile, string sChartTitel, DataSet ds)
+        {
+
+        }
     }
 }

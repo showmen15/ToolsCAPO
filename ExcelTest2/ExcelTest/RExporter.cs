@@ -13,6 +13,11 @@ namespace ExcelTest
 {
     public class RExporter
     {
+        //Kw test  analiza testu.
+        // https://www.youtube.com/watch?v=BkyGuNuaZYw
+        //https://www.youtube.com/watch?v=q1D4Di1KWLc
+        //http://prac.im.pwr.wroc.pl/~arokita/SMG/Tablica%20rozkladu%20chi%20kwadrat.pdf
+
         private string RscriptRun;
 
         public RExporter()
@@ -86,6 +91,28 @@ namespace ExcelTest
             return result;
         }
 
+        public RExporterResult GetChartPDFTest(DataSet ds, string sChartName)
+        {
+            RExporterResult result = new RExporterResult();
+            string rowData = string.Format("{0}\\input.csv", Environment.CurrentDirectory);
+
+            string sJPGPath = string.Format("{0}\\chart.pdf", Environment.CurrentDirectory);
+            string sTestDunnResult = string.Format("{0}\\dunnTest.txt", Environment.CurrentDirectory);
+            string sTestKwResult = string.Format("{0}\\KwTest.txt", Environment.CurrentDirectory);
+
+            exportToCSV(ds, rowData);
+            executeR(@".\BoxPlotPDF2.R", rowData, sJPGPath, sChartName);
+            result.ChartPath = sJPGPath;
+
+            executeR(string.Format("{0}\\DunnTest.R", Environment.CurrentDirectory), rowData, sTestDunnResult);
+            result.DunnTest = File.ReadAllLines(sTestDunnResult);
+
+            executeR(@".\KwTest.R", rowData, sTestKwResult);
+            result.KwTest = File.ReadAllLines(sTestKwResult);
+
+            return result;
+        }
+
         private void executeR(string sScriptFile, string sDataCsv, string sOutputFile)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -94,6 +121,21 @@ namespace ExcelTest
             startInfo.FileName = RscriptRun;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             startInfo.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\"", sScriptFile, sDataCsv, sOutputFile);
+
+            using (Process exeProcess = Process.Start(startInfo))
+            {
+                exeProcess.WaitForExit();
+            }
+        }
+
+        private void executeR(string sScriptFile, string sDataCsv, string sOutputFile,string sChartName)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = true;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = RscriptRun;
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", sScriptFile, sDataCsv, sOutputFile, sChartName);
 
             using (Process exeProcess = Process.Start(startInfo))
             {

@@ -12,7 +12,10 @@ using Microsoft.Office;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Data.SqlClient;
-using Microsoft.Office.Interop.Excel; 
+using Microsoft.Office.Interop.Excel;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace ExcelTest
 {
@@ -22,10 +25,12 @@ namespace ExcelTest
         {
             InitializeComponent();
 
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
-           // SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
+            //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
 
-          //  SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
+            // SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
+
+            //  SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=Doktorat; User Id=szsz; Password=szsz;";
         }
 
         // http://csharp.net-informations.com/excel/csharp-create-excel.htm
@@ -85,7 +90,7 @@ namespace ExcelTest
             SetCellValue(targetSheet, "D6", "0.28");
 
 
-          //  Excel.Range chartRange,chartRangeX;
+            //  Excel.Range chartRange,chartRangeX;
             Excel.Range ErrorMaksimum, ErrorMadiana, ErrorMinimum;
             Excel.Range xValues;
 
@@ -93,7 +98,7 @@ namespace ExcelTest
 
             String kwartyl1Desc, medianaDesc, kwartyl3Desc;
             //chartRange = targetSheet.get_Range("A3", "D5"); //zakres dla danych wykresu warosci y
-           // chartRangeX = targetSheet.get_Range("B1", "D1");
+            // chartRangeX = targetSheet.get_Range("B1", "D1");
 
             xValues = targetSheet.get_Range("B1", "D1");
 
@@ -116,24 +121,24 @@ namespace ExcelTest
             //chartPage.ChartWizard(chartRange, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue, misValue);
 
 
-         
+
 
 
             //chartRangeX = targetSheet.get_Range("B1", "D1");
 
-           
-
-           // chartPage.SetSourceData(chartRange, misValue);
 
 
-           // chartPage.set_HasAxis(chartRangeX);
+            // chartPage.SetSourceData(chartRange, misValue);
+
+
+            // chartPage.set_HasAxis(chartRangeX);
 
             //chartPage.HasLegend = false;
             //chartPage.HasTitle = true;
 
             //chartPage.ChartTitle.Text = "Tytul wykresu";
-     
-           
+
+
 
             xlWorkBook.SaveAs("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\TEST1.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
@@ -144,14 +149,14 @@ namespace ExcelTest
             Marshal.ReleaseComObject(xlApp);
 
             MessageBox.Show("Excel file created , you can find the file d:\\csharp-Excel.xls");
- 
+
 
 
         }
 
-        private static void CreateBoxCart(Excel.Worksheet targetSheet, Excel.Range xValues,  
-                                           String kwartyl1Desc, Excel.Range kwartyl1Values, 
-                                           String medianaDesc, Excel.Range medianaValues, 
+        private static void CreateBoxCart(Excel.Worksheet targetSheet, Excel.Range xValues,
+                                           String kwartyl1Desc, Excel.Range kwartyl1Values,
+                                           String medianaDesc, Excel.Range medianaValues,
                                            String kwartyl3Desc, Excel.Range kwartyl3Values,
                                            Excel.Range ErrorMaksimum, Excel.Range ErrorMadiana, Excel.Range ErrorMinimum)
         {
@@ -175,9 +180,9 @@ namespace ExcelTest
             series1.Name = medianaDesc;
             series1.XValues = xValues;
             series1.Values = medianaValues;
-            
+
             //series1.Format.Line.Parent
-            
+
             series1.Format.Line.Weight = 2.0F;
             series1.Format.Line.Visible = Microsoft.Office.Core.MsoTriState.msoTriStateMixed;  //Tri-State 
             series1.Format.Line.ForeColor.RGB = (int)Microsoft.Office.Interop.Excel.XlRgbColor.rgbBlack;
@@ -227,7 +232,7 @@ namespace ExcelTest
             MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
-        
+
 
 
         private void button3_Click(object sender, EventArgs e)
@@ -314,7 +319,7 @@ namespace ExcelTest
 
 
 
-        static void SetCellValue(Worksheet targetSheet, string Cell,object Value)
+        static void SetCellValue(Worksheet targetSheet, string Cell, object Value)
         {
             targetSheet.get_Range(
                 Cell, Cell).set_Value(XlRangeValueDataType.xlRangeValueDefault,
@@ -337,5 +342,156 @@ namespace ExcelTest
         {
 
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ExportSimulationDataPDF();
+        }
+
+
+        private void ExportSimulationDataPDF()
+        {
+            MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
+            string sTempInputDir = string.Format("{0}\\TempInput", Environment.CurrentDirectory);
+            string sOutputDir = string.Format("{0}\\Output", Environment.CurrentDirectory);
+
+            
+
+            foreach (var map in mapList)
+            {
+                ConfigItem[] itemConfigList = SQL.DataProviderExport.GetExportConfigList(map);
+                DataSet ds;
+                List<string> pdfsFile = new List<string>();
+                List<string> dunnTest = new List<string>();
+                List<string> kwTest = new List<string>();
+                List<string> LatexImageDescriptions = new List<string>();
+
+                StringBuilder sLatexFile = new StringBuilder();
+
+                double[] prawodpodobienstwMinimalnea = new double[] { 0, 3.8415, 5.9915, 7.8147, 9.4877, 11.0705, 12.5916 };
+                double alfa = 0.05;
+                string sCombineNamePDF = "Simulation " + map.MapName + ".pdf";
+                string sCombineNameTex = "Simulation " + map.MapName + ".tex";
+
+                // ExcelExporter export = new ExcelExporter();
+
+                if (Directory.Exists(sTempInputDir))
+                {
+                    Directory.Delete(sTempInputDir, true);
+                    Directory.CreateDirectory(sTempInputDir);
+                }
+                else
+                    Directory.CreateDirectory(sTempInputDir);
+
+
+                if (!Directory.Exists(sOutputDir))
+                    Directory.CreateDirectory(sOutputDir);
+
+
+                for (int i = 0; i < 3; i++) // itemConfigList.Length;i++)
+                {
+                    string sOutputPdfFile = string.Format("{0}\\{1}.pdf", sTempInputDir, i.ToString());
+                    string sChartTitel = string.Format("{0}", itemConfigList[i].Name); // ""; //Gdy zajedzie potrzeba to nadamy w tym mijscy nazwy wykresu 
+                    string sLatexImageDescriptions = string.Format("Eksperymenty symulacyjne: Mapa {0} Konfiguracja: {1}", map.MapName, itemConfigList[i].Name);
+
+                    ds = SQL.DataProviderExport.GetExportResult(itemConfigList[i].ConfigID);
+
+                    RExporter r = new RExporter();
+
+                    RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel);
+
+                    File.Move(chartAndTestResult.ChartPath, sOutputPdfFile);
+
+                    pdfsFile.Add(sOutputPdfFile);
+
+                    int df = chartAndTestResult.GetKwTestDF();
+                    double kw = chartAndTestResult.GetKwchiSquared();
+
+                    string outLatex = formatLatexFile(sChartTitel, string.Format("img/{0}", sCombineNamePDF),i,alfa, prawodpodobienstwMinimalnea[df],df,kw);
+                    sLatexFile.Append(outLatex);
+                }
+
+                concatAndAddContent(pdfsFile, string.Format("{0}\\{1}", sOutputDir, sCombineNamePDF));
+                File.AppendAllText(string.Format("{0}\\{1}", sOutputDir, sCombineNameTex), sLatexFile.ToString());
+
+          //      export.ExportDateUsingR(item.Name, ds); //tworzy exela oraz dodaje wykres z R
+                /*
+                 foreach (var item in itemConfigList)
+                 {
+                     ds = SQL.DataProviderExport.GetExportResult(item.ConfigID);
+                     //export.ExportDate(item.Name, ds); //tworzy klasycznego exela z wykresem
+                     export.ExportDateUsingR(item.Name, ds); //tworzy exela oraz dodaje wykres z R
+                 }
+
+                 export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
+                 //export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
+
+                 /export.Save("D:\\Desktop\\csharp-Excel12.xls");*/
+            }
+
+            MessageBox.Show(this, "Excel file created , you can find the file");
+        }
+
+
+        public string formatLatexFile(string sChartTitel,string sFileName,int iPage, double alfa, double chiCrituc, int df, double kw )
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.AppendLine();
+            result.AppendLine();
+            result.AppendLine("\\begin{figure}[ht]");
+            result.AppendLine("\t\\centering");
+
+            result.AppendLine("\t\\includegraphics[page = " + (iPage + 1).ToString() + ", width =\\columnwidth / 2]{" + sFileName + "}");
+
+            string kwTest = "$(\\alpha = " + alfa.ToString() + "; \\chi^{2}_{CRIT} = " + chiCrituc.ToString() + "; H^{2} = " + kw.ToString() + "; df = " + df.ToString() + ")$";
+
+            result.AppendLine("\t\\caption{" + sChartTitel.ToString() + ". " + "\\protect\\footnotemark" + "}");
+
+            result.AppendLine("\t\\label{fig:" + sChartTitel.ToString() + "}");
+            result.AppendLine("\\end{figure}");
+            result.AppendLine("\\footnotetext{" + kwTest.ToString() + "}");
+            result.AppendLine();
+            result.AppendLine();
+
+
+            string dd = result.ToString();
+            return dd;
+        }
+
+        public void concatAndAddContent(List<string> pdfsFile,string sOutputFile)
+        {
+            byte[] result;
+
+            using (var ms = new MemoryStream())
+            {
+                using (var doc = new Document())
+                {
+                    using (var copy = new PdfSmartCopy(doc, ms))
+                    {
+                        doc.Open();
+
+                        foreach (var item in pdfsFile)
+                        {
+                            using (var reader = new PdfReader(item))
+                            {
+                                copy.AddDocument(reader);
+                            }
+                        }
+
+                        doc.Close();
+                    }
+                }
+
+                result = ms.ToArray();
+            }
+
+            using (var fs = new FileStream(sOutputFile, FileMode.Create, FileAccess.Write))
+            {
+                fs.Write(result, 0, result.Length);
+            }
+        }
+
+
     }
 }

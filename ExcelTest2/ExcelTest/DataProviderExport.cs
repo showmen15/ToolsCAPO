@@ -19,7 +19,7 @@ namespace ExcelTest
 
                 checkConnection();
 
-                cmd.CommandText = "SELECT ID_Config,Name FROM dbo.ExportConfigList WHERE ID_Map = @ID_Map ORDER BY ID_Config DESC";
+                cmd.CommandText = "SELECT ID_Config,Name FROM dbo.ExportConfigList WHERE ID_Map = @ID_Map ORDER BY ID_Config ASC";
                 cmd.Parameters.AddWithValue("@ID_Map", map.ID_Map);
 
                 using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -48,7 +48,7 @@ namespace ExcelTest
 
                 checkConnection();
 
-                cmd.CommandText = "SELECT distinct ID_Map,MapName FROM dbo.ExportConfigList";
+                cmd.CommandText = "SELECT distinct ID_Map,MapName FROM dbo.ExportConfigList where ID_Map = 10  order by ID_Map";
 
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
