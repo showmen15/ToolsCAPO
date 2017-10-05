@@ -223,7 +223,14 @@ namespace ExcelTest
 
                 }
 
-                export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
+                string sOutputDir =  string.Format("{0}\\ExcelExport", Environment.CurrentDirectory);
+
+                if(!Directory.Exists(sOutputDir))
+                    Directory.CreateDirectory(sOutputDir);
+
+                export.Save(string.Format("{1}\\{0}.xls", map.MapName, sOutputDir));
+
+                //export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
                 //export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
 
                 //export.Save("D:\\Desktop\\csharp-Excel12.xls");
@@ -373,8 +380,6 @@ namespace ExcelTest
                 string sCombineNamePDF = "Simulation " + map.MapName + ".pdf";
                 string sCombineNameTex = "Simulation " + map.MapName + ".tex";
 
-                // ExcelExporter export = new ExcelExporter();
-
                 if (Directory.Exists(sTempInputDir))
                 {
                     Directory.Delete(sTempInputDir, true);
@@ -388,7 +393,7 @@ namespace ExcelTest
                     Directory.CreateDirectory(sOutputDir);
 
 
-                for (int i = 0; i < 3; i++) // itemConfigList.Length;i++)
+                for (int i = 0; i < itemConfigList.Length;i++)
                 {
                     string sOutputPdfFile = string.Format("{0}\\{1}.pdf", sTempInputDir, i.ToString());
                     string sChartTitel = string.Format("{0}", itemConfigList[i].Name); // ""; //Gdy zajedzie potrzeba to nadamy w tym mijscy nazwy wykresu 
@@ -413,20 +418,6 @@ namespace ExcelTest
 
                 concatAndAddContent(pdfsFile, string.Format("{0}\\{1}", sOutputDir, sCombineNamePDF));
                 File.AppendAllText(string.Format("{0}\\{1}", sOutputDir, sCombineNameTex), sLatexFile.ToString());
-
-          //      export.ExportDateUsingR(item.Name, ds); //tworzy exela oraz dodaje wykres z R
-                /*
-                 foreach (var item in itemConfigList)
-                 {
-                     ds = SQL.DataProviderExport.GetExportResult(item.ConfigID);
-                     //export.ExportDate(item.Name, ds); //tworzy klasycznego exela z wykresem
-                     export.ExportDateUsingR(item.Name, ds); //tworzy exela oraz dodaje wykres z R
-                 }
-
-                 export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
-                 //export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
-
-                 /export.Save("D:\\Desktop\\csharp-Excel12.xls");*/
             }
 
             MessageBox.Show(this, "Excel file created , you can find the file");

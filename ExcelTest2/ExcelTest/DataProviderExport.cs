@@ -48,7 +48,7 @@ namespace ExcelTest
 
                 checkConnection();
 
-                cmd.CommandText = "SELECT distinct ID_Map,MapName FROM dbo.ExportConfigList where ID_Map = 10  order by ID_Map";
+                cmd.CommandText = "SELECT distinct ID_Map,MapName FROM dbo.ExportConfigList  order by ID_Map";
 
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
