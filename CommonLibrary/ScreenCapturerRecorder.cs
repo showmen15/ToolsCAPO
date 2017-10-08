@@ -36,7 +36,10 @@ namespace CommonLibrary
         private void init()
         { 
             RegistryKey myKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Screen Capturer Recorder_is1");
-            sFFmpegPath = string.Format(@"{0}configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe",(String)myKey.GetValue("InstallLocation"));
+
+
+            //sFFmpegPath = string.Format(@"{0}configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe",(String)myKey.GetValue("InstallLocation"));
+            //sFFmpegPath = //string.Format(@"{0}configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe", sFFmpegPath);
         }
 
         public void StartRecord(VisualizerConfig item)

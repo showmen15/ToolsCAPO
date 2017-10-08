@@ -32,7 +32,7 @@ namespace TaskVisualizer
             InitializeComponent();
 
             timerRecorderWorking.Stop();
-            txtServerName.SelectedIndex = 0;
+            txtServerName.SelectedIndex = 1;
         }
 
         private void initDB(string sServerName, string sUser, string sPass)
@@ -137,7 +137,7 @@ namespace TaskVisualizer
 
         private void closeVisualizer()
         {
-            if (visualizer != null)
+            if (visualizer != null && !visualizer.HasExited)
                 visualizer.Kill();
 
             visualizer = null;
