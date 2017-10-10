@@ -21,6 +21,10 @@ namespace CommonLibrary
         //https://github.com/rdp/screen-capture-recorder-to-video-windows-free
         //free screen recorder source
 
+         //Ukrycie ikon pulpitu
+        //https://www.youtube.com/watch?v=VN-BDwCv4eU
+        
+
         private string movieDirectoryOutput = @"C:\NagraniaOutput";
 
         private string sFFmpegPath = @"C:\Program Files (x86)\Screen Capturer Recorder\configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe";
