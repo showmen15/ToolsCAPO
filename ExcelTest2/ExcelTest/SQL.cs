@@ -101,7 +101,11 @@ namespace ExcelTest
             set
             {
                 if (conn.State == ConnectionState.Open)
+                {
+                    isDisposing = true;
                     conn.Close();
+                    isDisposing = false;
+                }
 
                 conn.ConnectionString = value + ";Asynchronous Processing=true";
 
