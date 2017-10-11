@@ -48,7 +48,8 @@ namespace CommonLibrary
 
         public void StartRecord(VisualizerConfig item)
         {
-            string sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", item.Name_Map, item.Name_Program, item.Name_Config, item.ID_Trials);
+            //string sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", item.Name_Map, item.Name_Program, item.Name_Config, item.ID_Trials); 
+            string sNewFileName = string.Format("{0}_{1}_{2}.mp4", item.Name_Map, item.Name_Program, item.Name_Config); //bez trials
             string sFileOutputDirectory = string.Format("{0}\\{1}\\{2}\\{3}", movieDirectoryOutput, item.Name_Map, item.Name_Program, item.Name_Config);
 
             if (!System.IO.File.Exists(sFileOutputDirectory))
