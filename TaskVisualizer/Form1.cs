@@ -56,7 +56,7 @@ namespace TaskVisualizer
                         lblCaseName.Text = String.Format("CaseID: {0}, CaseName: {1}, Program: {2}, Trials: {3}", item.ID_Case, item.Name_Case, item.Name_Program, item.ID_Trials);
                     }));
 
-                    recorder.StartRecord(item);
+                    
 
                     exeFilePath = @".\Visualizer\OfflineVisualizer.jar";
 
@@ -71,6 +71,12 @@ namespace TaskVisualizer
                     // process.StartInfo.RedirectStandardError = true;
 
                     visualizer.Start();
+                   
+
+                    System.Threading.Thread.Sleep(700);
+
+                    recorder.StartRecord(item);
+
 
                     visualizer.WaitForExit();
 

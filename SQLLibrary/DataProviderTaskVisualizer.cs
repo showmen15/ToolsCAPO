@@ -51,7 +51,7 @@ namespace SQLLibrary
                              (string)rdr["Name_Config"],
                              (string)rdr["Name_Map"],
                              (string)rdr["Name_Program"],
-                             (string)rdr["IdGlobal"]);
+                             rdr["IdGlobal"].GetValue<string>(string.Empty));
 
                         tasks.Add(temp);
                     }
