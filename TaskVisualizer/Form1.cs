@@ -87,7 +87,7 @@ namespace TaskVisualizer
                     else if (Working && !Skip)
                     {
                        // recorder.RenameRecordedFileVisualizer(item);
-                        //SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
+                        SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
                     else
                     {
@@ -103,7 +103,9 @@ namespace TaskVisualizer
                 {
                     closeVisualizer();
                 }
-            }    
+            }
+
+            butStop.PerformClick();
         }
 
         private void butRun_Click(object sender, EventArgs e)

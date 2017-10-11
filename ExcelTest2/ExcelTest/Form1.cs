@@ -26,7 +26,10 @@ namespace ExcelTest
             InitializeComponent();
 
             //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
+          //  SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
+
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
+
 
             // SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
 
@@ -352,12 +355,18 @@ namespace ExcelTest
 
         private void button5_Click(object sender, EventArgs e)
         {
-            ExportSimulationDataPDF();
+            //Export danych symulacyjnych
+            //ExportSimulationDataPDF();
+
+            //Export danych roboty
+            ExportRobotDataPDF();
         }
 
 
         private void ExportSimulationDataPDF()
         {
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
+
             MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
             string sTempInputDir = string.Format("{0}\\TempInput", Environment.CurrentDirectory);
             string sOutputDir = string.Format("{0}\\Output", Environment.CurrentDirectory);
@@ -413,6 +422,75 @@ namespace ExcelTest
                     double kw = chartAndTestResult.GetKwchiSquared();
 
                     string outLatex = formatLatexFile(sChartTitel, string.Format("img/{0}", sCombineNamePDF),i,alfa, prawodpodobienstwMinimalnea[df],df,kw);
+                    sLatexFile.Append(outLatex);
+                }
+
+                concatAndAddContent(pdfsFile, string.Format("{0}\\{1}", sOutputDir, sCombineNamePDF));
+                File.AppendAllText(string.Format("{0}\\{1}", sOutputDir, sCombineNameTex), sLatexFile.ToString());
+            }
+
+            MessageBox.Show(this, "Excel file created , you can find the file");
+        }
+
+        private void ExportRobotDataPDF()
+        {
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
+
+            MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
+            string sTempInputDir = string.Format("{0}\\TempInput", Environment.CurrentDirectory);
+            string sOutputDir = string.Format("{0}\\Output", Environment.CurrentDirectory);
+
+
+
+            foreach (var map in mapList)
+            {
+                ConfigItem[] itemConfigList = SQL.DataProviderExport.GetExportConfigList(map);
+                DataSet ds;
+                List<string> pdfsFile = new List<string>();
+                List<string> dunnTest = new List<string>();
+                List<string> kwTest = new List<string>();
+                List<string> LatexImageDescriptions = new List<string>();
+
+                StringBuilder sLatexFile = new StringBuilder();
+
+                double[] prawodpodobienstwMinimalnea = new double[] { 0, 3.8415, 5.9915, 7.8147, 9.4877, 11.0705, 12.5916 };
+                double alfa = 0.05;
+                string sCombineNamePDF = "Robots " + map.MapName + ".pdf";
+                string sCombineNameTex = "Robots " + map.MapName + ".tex";
+
+                if (Directory.Exists(sTempInputDir))
+                {
+                    Directory.Delete(sTempInputDir, true);
+                    Directory.CreateDirectory(sTempInputDir);
+                }
+                else
+                    Directory.CreateDirectory(sTempInputDir);
+
+
+                if (!Directory.Exists(sOutputDir))
+                    Directory.CreateDirectory(sOutputDir);
+
+
+                for (int i = 0; i < itemConfigList.Length; i++)
+                {
+                    string sOutputPdfFile = string.Format("{0}\\{1}.pdf", sTempInputDir, i.ToString());
+                    string sChartTitel = string.Format("{0}", itemConfigList[i].Name); // ""; //Gdy zajedzie potrzeba to nadamy w tym mijscy nazwy wykresu 
+                    string sLatexImageDescriptions = string.Format("Eksperymenty Roboty: Mapa {0} Konfiguracja: {1}", map.MapName, itemConfigList[i].Name);
+
+                    ds = SQL.DataProviderExport.GetExportResult(itemConfigList[i].ConfigID);
+
+                    RExporter r = new RExporter();
+
+                    RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel);
+
+                    File.Move(chartAndTestResult.ChartPath, sOutputPdfFile);
+
+                    pdfsFile.Add(sOutputPdfFile);
+
+                    int df = chartAndTestResult.GetKwTestDF();
+                    double kw = chartAndTestResult.GetKwchiSquared();
+
+                    string outLatex = formatLatexFile(sChartTitel, string.Format("img/{0}", sCombineNamePDF), i, alfa, prawodpodobienstwMinimalnea[df], df, kw);
                     sLatexFile.Append(outLatex);
                 }
 
