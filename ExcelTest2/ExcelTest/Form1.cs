@@ -356,7 +356,7 @@ namespace ExcelTest
         private void button5_Click(object sender, EventArgs e)
         {
             //Export danych symulacyjnych
-            //ExportSimulationDataPDF();
+            ExportSimulationDataPDF();
 
             //Export danych roboty
             ExportRobotDataPDF();
@@ -388,6 +388,9 @@ namespace ExcelTest
                 double alfa = 0.05;
                 string sCombineNamePDF = "Simulation " + map.MapName + ".pdf";
                 string sCombineNameTex = "Simulation " + map.MapName + ".tex";
+
+                sCombineNamePDF = sCombineNamePDF.Replace(" ", "_"); //usuniecie spacje w nazwie pliku wynikowym pdf
+                sCombineNameTex = sCombineNameTex.Replace(" ", "_"); //usuniecie spcaji w nazwie poliku wynikowego tex
 
                 if (Directory.Exists(sTempInputDir))
                 {
@@ -457,6 +460,9 @@ namespace ExcelTest
                 double alfa = 0.05;
                 string sCombineNamePDF = "Robots " + map.MapName + ".pdf";
                 string sCombineNameTex = "Robots " + map.MapName + ".tex";
+
+                sCombineNamePDF = sCombineNamePDF.Replace(" ", "_"); //usuniecie spacje w nazwie pliku wynikowym pdf
+                sCombineNameTex = sCombineNameTex.Replace(" ", "_"); //usuniecie spcaji w nazwie poliku wynikowego tex
 
                 if (Directory.Exists(sTempInputDir))
                 {

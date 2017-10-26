@@ -32,7 +32,7 @@ namespace TaskVisualizer
             InitializeComponent();
 
             timerRecorderWorking.Stop();
-            txtServerName.SelectedIndex = 1;
+            txtServerName.SelectedIndex = 0;
         }
 
         private void initDB(string sServerName, string sUser, string sPass)
@@ -86,7 +86,8 @@ namespace TaskVisualizer
                         Skip = false;
                     else if (Working && !Skip)
                     {
-                       // recorder.RenameRecordedFileVisualizer(item);
+                        // recorder.RenameRecordedFileVisualizer(item);
+                        addDiscriptionToFile();
                         SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
                     else
@@ -175,21 +176,48 @@ namespace TaskVisualizer
             Beep(2500, 1000);
         }
 
+
+        private void addDiscriptionToFile(string filePath, string  titel, string comment)
+        {
+            var file = ShellFile.FromFilePath(filePath);
+
+            file.Properties.System.Title.Value = titel;
+            file.Properties.System.Comment.Value = comment;
+            file.Properties.System.Media.Year.Value = 2017;
+
+            file.Properties.System.Author.Value = new string[] { "Szymon Szomiński" };
+
+
+            // Read and Write:
+
+            //foreach (var item in file.Properties.DefaultPropertyCollection)
+            //{
+            //    ShellProperty<uint?> porp = item as ShellProperty<uint?>;
+
+            //    if (porp != null)
+            //    {
+
+            //        Console.WriteLine(string.Format("{0} Value: {1}", "", porp.Value.ToString()));
+            //    }
+            //}
+
+
+        }
+
         #endregion
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            string filePath = @"C:\test\szsz\uuu.mp4";
+            string sTitel = "testowy";
+            string sComment = "ID  Case_ID"; //bez nowy lini
 
-            string filePath = @"C:\Nowy\Robot_2017_06_14_15_44_24.avi";
-            var file = ShellFile.FromFilePath(filePath);
 
-            // Read and Write:
+            addDiscriptionToFile(filePath, sTitel, sComment);
 
-            string[] oldAuthors = file.Properties.System.Author.Value;
-            string oldTitle = file.Properties.System.Title.Value;
+            // string filePath = @"C:\Nowy\Robot_2017_06_14_15_44_24.avi";
 
-            file.Properties.System.Author.Value = new string[] { "Author #1", "Author #2" };
-            file.Properties.System.Title.Value = "Example Title";
+
 
             /*
             List<string> arrHeaders = new List<string>();
