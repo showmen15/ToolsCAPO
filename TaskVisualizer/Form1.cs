@@ -32,7 +32,7 @@ namespace TaskVisualizer
             InitializeComponent();
 
             timerRecorderWorking.Stop();
-            txtServerName.SelectedIndex = 0;
+            txtServerName.SelectedIndex = 2;
         }
 
         private void initDB(string sServerName, string sUser, string sPass)
@@ -44,6 +44,8 @@ namespace TaskVisualizer
         {
             string exeFilePath;
             visualizer = null;
+
+            string sFileMovePath;
 
             taskList = SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
 
@@ -80,14 +82,19 @@ namespace TaskVisualizer
 
                     visualizer.WaitForExit();
 
-                    recorder.StopRecord();
+                    sFileMovePath = recorder.StopRecord();
 
                     if (Working && Skip)
                         Skip = false;
                     else if (Working && !Skip)
                     {
                         // recorder.RenameRecordedFileVisualizer(item);
-                        addDiscriptionToFile();
+
+                        string titel = Path.GetFileNameWithoutExtension(sFileMovePath);
+                        string[] tags = item.GetDiscription();
+
+                        addDiscriptionToFile(sFileMovePath, titel, tags, item.IdGlobal);
+
                         SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
                     else
@@ -177,16 +184,22 @@ namespace TaskVisualizer
         }
 
 
-        private void addDiscriptionToFile(string filePath, string  titel, string comment)
+        private void addDiscriptionToFile(string filePath, string titel, string[] tags , string comment)
         {
             var file = ShellFile.FromFilePath(filePath);
 
             file.Properties.System.Title.Value = titel;
             file.Properties.System.Comment.Value = comment;
+
             file.Properties.System.Media.Year.Value = 2017;
 
-            file.Properties.System.Author.Value = new string[] { "Szymon Szomiński" };
+            using (var writer = file.Properties.GetPropertyWriter())
+            {
+                writer.WriteProperty(file.Properties.System.Keywords, tags, true);
+                writer.Close();
+            }
 
+            file.Properties.System.Author.Value = new string[] { "Szymon Szomiński" };
 
             // Read and Write:
 
@@ -200,20 +213,32 @@ namespace TaskVisualizer
             //        Console.WriteLine(string.Format("{0} Value: {1}", "", porp.Value.ToString()));
             //    }
             //}
-
-
         }
 
         #endregion
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            string filePath = @"C:\test\szsz\uuu.mp4";
+            //string filePath = @"C:\test\szsz\uuu.mp4";
+
+            string filePath = @"D:\NagraniaOutput\OtwartaPrzestrzeń7x5m\FearFactorBase_OtwartaPrzestrzeń7x5m_OtwartaPrzestrzeń 1-H1.mp4";
             string sTitel = "testowy";
-            string sComment = "ID  Case_ID"; //bez nowy lini
+            string[] tags  = new string[]
+            {
+                string.Format("ID_Case = {0}",232),
+                string.Format("ID_Trials = {0}",44343),
+                string.Format("Name = {0}",Name),
+                string.Format("Name_Case = {0}",5454),
+                string.Format("Name_Config = {0}",6565),
 
+                string.Format("Name_Map = {0}",6464),
+                string.Format("Name_Program = {0}",7675),
+                string.Format("IdGlobal = {0}","42435_63_6436_36")
+            };
 
-            addDiscriptionToFile(filePath, sTitel, sComment);
+            string sComment = "tags";
+
+            addDiscriptionToFile(filePath, sTitel, tags, sComment);
 
             // string filePath = @"C:\Nowy\Robot_2017_06_14_15_44_24.avi";
 

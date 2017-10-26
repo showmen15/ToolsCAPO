@@ -18,6 +18,24 @@ namespace CommonLibrary
         public string Name_Program { get; set; }
         public string IdGlobal { get; set; }
 
+        public string[] GetDiscription()
+        {
+            string[] result = new string[]
+            {
+                string.Format("ID_Case = {0}",ID_Case),
+                string.Format("ID_Trials = {0}",ID_Trials),
+                string.Format("Name = {0}",Name),
+                string.Format("Name_Case = {0}",Name_Case),
+                string.Format("Name_Config = {0}",Name_Config),
+
+                string.Format("Name_Map = {0}",Name_Map),
+                string.Format("Name_Program = {0}",Name_Program),
+                string.Format("IdGlobal = {0}",IdGlobal)
+            };
+
+            return result;
+        }
+
         public VisualizerConfig(int iID_Case, int iID_Trials, string sName, string sName_Case,
                                 string sName_Config, string sName_Map, string sName_Program, string sIdGlobal)
         {

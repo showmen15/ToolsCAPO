@@ -49,7 +49,8 @@
             this.txtServerName.FormattingEnabled = true;
             this.txtServerName.Items.AddRange(new object[] {
             "WR-7-BASE-74\\SQLEXPRESS",
-            "SZSZ\\SQLEXPRESS"});
+            "SZSZ\\SQLEXPRESS",
+            "SZYMON-KOMPUTER"});
             this.txtServerName.Location = new System.Drawing.Point(78, 5);
             this.txtServerName.Name = "txtServerName";
             this.txtServerName.Size = new System.Drawing.Size(272, 21);

@@ -32,6 +32,8 @@ namespace CommonLibrary
 
         private Process recorder;
 
+        private string sFileMovePath;
+
         public ScreenCapturerRecorder()
         {
             init();
@@ -55,7 +57,7 @@ namespace CommonLibrary
             if (!System.IO.File.Exists(sFileOutputDirectory))
                 System.IO.Directory.CreateDirectory(sFileOutputDirectory);
 
-            string sFileMovePath = string.Format("{0}\\{1}", sFileOutputDirectory, sNewFileName);
+            sFileMovePath = string.Format("{0}\\{1}", sFileOutputDirectory, sNewFileName);
 
             if (recorder != null && !recorder.HasExited)
                 recorder.Kill();
@@ -72,7 +74,7 @@ namespace CommonLibrary
             recorder.Start();
         }
 
-        public void StopRecord()
+        public string StopRecord()
         {
             if (recorder != null)
             {
@@ -80,6 +82,8 @@ namespace CommonLibrary
 
                 recorder = null;
             }
+
+            return sFileMovePath;
         }
 
         public void RenameRecordedFile(string sNewFile)
