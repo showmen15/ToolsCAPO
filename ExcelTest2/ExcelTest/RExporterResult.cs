@@ -14,16 +14,27 @@ namespace ExcelTest
 
         public int GetKwTestDF()
         {
-            string[] split = KwTest[4].Split(',');
-            int value = int.Parse(split[1].Replace("df =", string.Empty));
+            int value = 0;
+
+            if (KwTest != null && KwTest.Length > 0)
+            {
+
+                string[] split = KwTest[4].Split(',');
+                value = int.Parse(split[1].Replace("df =", string.Empty));
+           }
 
             return value;
         }
 
         public double GetKwchiSquared()
         {
-            string[] split = KwTest[4].Split(',');
-            double value = double.Parse(split[0].Replace("Kruskal-Wallis chi-squared =", string.Empty).Replace(".",","));
+            double value = 0.0;
+
+            if (KwTest != null && KwTest.Length > 0)
+            {
+                string[] split = KwTest[4].Split(',');
+                value = double.Parse(split[0].Replace("Kruskal-Wallis chi-squared =", string.Empty).Replace(".", ","));
+            }
 
             return value;
         }

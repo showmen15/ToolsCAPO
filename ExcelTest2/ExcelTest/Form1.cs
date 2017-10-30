@@ -371,7 +371,6 @@ namespace ExcelTest
             string sTempInputDir = string.Format("{0}\\TempInput", Environment.CurrentDirectory);
             string sOutputDir = string.Format("{0}\\Output", Environment.CurrentDirectory);
 
-            
 
             foreach (var map in mapList)
             {
@@ -413,9 +412,11 @@ namespace ExcelTest
 
                     ds = SQL.DataProviderExport.GetExportResult(itemConfigList[i].ConfigID);
 
+                    ds = removeUnnecessaryData(ds,map.ID_Map);
+
                     RExporter r = new RExporter();
 
-                    RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel);
+                    RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel, map.ID_Map);
 
                     File.Move(chartAndTestResult.ChartPath, sOutputPdfFile);
 
@@ -485,9 +486,11 @@ namespace ExcelTest
 
                     ds = SQL.DataProviderExport.GetExportResult(itemConfigList[i].ConfigID);
 
+                    ds = removeUnnecessaryData(ds, map.ID_Map);
+
                     RExporter r = new RExporter();
 
-                    RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel);
+                    RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel, map.ID_Map);
 
                     File.Move(chartAndTestResult.ChartPath, sOutputPdfFile);
 
@@ -507,6 +510,31 @@ namespace ExcelTest
             MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
+        private DataSet removeUnnecessaryData(DataSet input, int id_Map)
+        {
+            switch (id_Map)
+            {
+
+                case 6: //Simulation_Eight_intersectionusun PF i PF+
+                case 10: //Simulation_Open_space usun PF+ i PF
+                case 13: //A narrow corridor
+                case 15: //SkrzyżowanieRównorzędneNowe
+                case 16: // Circel
+                case 18: //Passing place
+
+                case 19: // Robots_Open_space
+                case 20: //Robots_Passing_place
+                case 21: //LabOtwartaPrzestrzeń 4 Roboty
+
+                    input.Tables[0].Columns.Remove("CP");
+                    input.Tables[0].Columns.Remove("CP_NEW");
+                    break;
+            }
+
+            return input;
+        }
+
+      
 
         public string formatLatexFile(string sChartTitel,string sFileName,int iPage, double alfa, double chiCrituc, int df, double kw )
         {

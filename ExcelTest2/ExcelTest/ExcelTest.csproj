@@ -84,6 +84,9 @@
     <None Include="BoxPlotPDF2.R">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="BoxPlotPDF3.R">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="DunnTest.R">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

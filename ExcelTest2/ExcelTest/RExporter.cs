@@ -91,7 +91,7 @@ namespace ExcelTest
             return result;
         }
 
-        public RExporterResult GetChartPDFTest(DataSet ds, string sChartName)
+        public RExporterResult GetChartPDFTest(DataSet ds, string sChartName,int id_map)
         {
             RExporterResult result = new RExporterResult();
             string rowData = string.Format("{0}\\input.csv", Environment.CurrentDirectory);
@@ -101,7 +101,9 @@ namespace ExcelTest
             string sTestKwResult = string.Format("{0}\\KwTest.txt", Environment.CurrentDirectory);
 
             exportToCSV(ds, rowData);
-            executeR(@".\BoxPlotPDF2.R", rowData, sJPGPath, sChartName);
+
+            string sScriptFile = setChartExporter(id_map);
+            executeR(sScriptFile, rowData, sJPGPath, sChartName);
             result.ChartPath = sJPGPath;
 
             executeR(string.Format("{0}\\DunnTest.R", Environment.CurrentDirectory), rowData, sTestDunnResult);
@@ -141,6 +143,30 @@ namespace ExcelTest
             {
                 exeProcess.WaitForExit();
             }
+        }
+
+        private string setChartExporter(int id_Map)
+        {
+            string result = @".\BoxPlotPDF2.R";
+
+            switch (id_Map)
+            {
+
+                case 6: //Simulation_Eight_intersectionusun PF i PF+
+                case 10: //Simulation_Open_space usun PF+ i PF
+                case 13: //A narrow corridor
+                case 15: //Skrzy¿owanieRównorzêdneNowe
+                case 16: // Circel
+                case 18: //Passing place
+
+                case 19: // Robots_Open_space
+                case 20: //Robots_Passing_place
+                case 21: //LabOtwartaPrzestrzeñ 4 Roboty
+
+                    result = @".\BoxPlotPDF3.R";
+                    break;
+            }
+            return result;
         }
     }
 }
