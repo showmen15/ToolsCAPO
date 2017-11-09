@@ -534,7 +534,11 @@ namespace ExcelTest
             return input;
         }
 
-      
+        private string formatKwTest(double alfa, double chiCrituc, int df, double kw)
+        {
+            string kwTest = "$(\\alpha = " + alfa.ToString() + "; \\chi^{2}_{CRIT} = " + chiCrituc.ToString() + "; H^{2} = " + kw.ToString() + "; df = " + df.ToString() + ")$";
+            return kwTest;
+        }
 
         public string formatLatexFile(string sChartTitel,string sFileName,int iPage, double alfa, double chiCrituc, int df, double kw,string sMapName)
         {
@@ -550,14 +554,15 @@ namespace ExcelTest
 
             result.AppendLine("\t\\includegraphics[page = " + (iPage + 1).ToString() + ", width=0.49\\columnwidth]{" + sFileName + "}");
 
-            string kwTest = "$(\\alpha = " + alfa.ToString() + "; \\chi^{2}_{CRIT} = " + chiCrituc.ToString() + "; H^{2} = " + kw.ToString() + "; df = " + df.ToString() + ")$";
+            //string kwTest = formatKwTest(alfa, chiCrituc, df,  kw); //"$(\\alpha = " + alfa.ToString() + "; \\chi^{2}_{CRIT} = " + chiCrituc.ToString() + "; H^{2} = " + kw.ToString() + "; df = " + df.ToString() + ")$";
 
-            result.AppendLine("\t\\caption{" + sChartTitel.ToString() + "." + "\\footnoteref{foot:" + sMapName + "_" + sChartTitel.ToString() + "}}");
+            //result.AppendLine("\t\\caption{" + sChartTitel.ToString() + "." + "\\footnoteref{foot:" + sMapName + "_" + sChartTitel.ToString() + "}}");
 
+            result.AppendLine("\t\\caption{" + sChartTitel.ToString() + "." + "}");
             result.AppendLine("\t\\label{fig:" + sChartTitel.ToString() + "}");
             result.AppendLine("\\end{figure}");
 
-            result.AppendLine("\\footnotelabeled{foot:" + sMapName + "_" + sChartTitel.ToString() + "}{" + kwTest.ToString() + "}");
+            //result.AppendLine("\\footnotelabeled{foot:" + sMapName + "_" + sChartTitel.ToString() + "}{" + kwTest.ToString() + "}");
             result.AppendLine();
             result.AppendLine();
 

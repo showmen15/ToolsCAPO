@@ -102,17 +102,33 @@ namespace ExcelTest
 
             exportToCSV(ds, rowData);
 
-            string sScriptFile = setChartExporter(id_map);
-            executeR(sScriptFile, rowData, sJPGPath, sChartName);
-            result.ChartPath = sJPGPath;
-
             executeR(string.Format("{0}\\DunnTest.R", Environment.CurrentDirectory), rowData, sTestDunnResult);
             result.DunnTest = File.ReadAllLines(sTestDunnResult);
 
             executeR(@".\KwTest.R", rowData, sTestKwResult);
             result.KwTest = File.ReadAllLines(sTestKwResult);
 
+            int df = result.GetKwTestDF();
+            double kw = result.GetKwchiSquared();
+
+            string testResult = result.GetKwchiDescription(); //formatKwTest(df, kw);
+
+            string sScriptFile = setChartExporter(id_map);
+            executeR(sScriptFile, rowData, sJPGPath, sChartName, testResult);
+            result.ChartPath = sJPGPath;
+
             return result;
+        }
+
+        private string formatKwTest(int df, double kw)
+        {
+            double[] prawodpodobienstwMinimalnea = new double[] { 0, 3.8415, 5.9915, 7.8147, 9.4877, 11.0705, 12.5916 };
+            double alfa = 0.05;
+
+            double chiCrituc = prawodpodobienstwMinimalnea[df];
+
+            string kwTest = "$(\\alpha = " + alfa.ToString() + "; \\chi^{2}_{CRIT} = " + chiCrituc.ToString() + "; H^{2} = " + kw.ToString() + "; df = " + df.ToString() + ")$";
+            return kwTest;
         }
 
         private void executeR(string sScriptFile, string sDataCsv, string sOutputFile)
@@ -130,14 +146,14 @@ namespace ExcelTest
             }
         }
 
-        private void executeR(string sScriptFile, string sDataCsv, string sOutputFile,string sChartName)
+        private void executeR(string sScriptFile, string sDataCsv, string sOutputFile,string sChartName, string testResult)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = true;
             startInfo.UseShellExecute = false;
             startInfo.FileName = RscriptRun;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\"", sScriptFile, sDataCsv, sOutputFile, sChartName);
+            startInfo.Arguments = string.Format("\"{0}\" \"{1}\" \"{2}\" \"{3}\" \"{4}\"", sScriptFile, sDataCsv, sOutputFile, sChartName, testResult);
 
             using (Process exeProcess = Process.Start(startInfo))
             {

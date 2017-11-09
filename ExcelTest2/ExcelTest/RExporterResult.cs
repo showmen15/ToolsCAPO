@@ -51,6 +51,16 @@ namespace ExcelTest
             }
         }
 
+        public string GetKwchiDescription()
+        {
+            string result = "null";//string.Empty;
+
+            if(KwTest.Length > 4)
+                result = KwTest[4];
+
+            return result;
+        }
+
         public RExporterResult()
         {
         }
