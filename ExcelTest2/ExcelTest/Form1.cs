@@ -425,7 +425,7 @@ namespace ExcelTest
                     int df = chartAndTestResult.GetKwTestDF();
                     double kw = chartAndTestResult.GetKwchiSquared();
 
-                    string outLatex = formatLatexFile(sChartTitel, string.Format("img/{0}", sCombineNamePDF),i,alfa, prawodpodobienstwMinimalnea[df],df,kw);
+                    string outLatex = formatLatexFile(sChartTitel, string.Format("06_experimental_results/simulation/img/{0}", sCombineNamePDF),i,alfa, prawodpodobienstwMinimalnea[df],df,kw, map.MapName);
                     sLatexFile.Append(outLatex);
                 }
 
@@ -499,7 +499,7 @@ namespace ExcelTest
                     int df = chartAndTestResult.GetKwTestDF();
                     double kw = chartAndTestResult.GetKwchiSquared();
 
-                    string outLatex = formatLatexFile(sChartTitel, string.Format("img/{0}", sCombineNamePDF), i, alfa, prawodpodobienstwMinimalnea[df], df, kw);
+                    string outLatex = formatLatexFile(sChartTitel, string.Format("06_experimental_results/robot/img/{0}", sCombineNamePDF), i, alfa, prawodpodobienstwMinimalnea[df], df, kw,map.MapName);
                     sLatexFile.Append(outLatex);
                 }
 
@@ -536,8 +536,11 @@ namespace ExcelTest
 
       
 
-        public string formatLatexFile(string sChartTitel,string sFileName,int iPage, double alfa, double chiCrituc, int df, double kw )
+        public string formatLatexFile(string sChartTitel,string sFileName,int iPage, double alfa, double chiCrituc, int df, double kw,string sMapName)
         {
+
+            sMapName = sMapName.Replace(" ", "_");
+
             StringBuilder result = new StringBuilder();
 
             result.AppendLine();
@@ -545,15 +548,16 @@ namespace ExcelTest
             result.AppendLine("\\begin{figure}[ht]");
             result.AppendLine("\t\\centering");
 
-            result.AppendLine("\t\\includegraphics[page = " + (iPage + 1).ToString() + ", width =\\columnwidth / 2]{" + sFileName + "}");
+            result.AppendLine("\t\\includegraphics[page = " + (iPage + 1).ToString() + ", width=0.49\\columnwidth]{" + sFileName + "}");
 
             string kwTest = "$(\\alpha = " + alfa.ToString() + "; \\chi^{2}_{CRIT} = " + chiCrituc.ToString() + "; H^{2} = " + kw.ToString() + "; df = " + df.ToString() + ")$";
 
-            result.AppendLine("\t\\caption{" + sChartTitel.ToString() + ". " + "\\protect\\footnotemark" + "}");
+            result.AppendLine("\t\\caption{" + sChartTitel.ToString() + "." + "\\footnoteref{foot:" + sMapName + "_" + sChartTitel.ToString() + "}}");
 
             result.AppendLine("\t\\label{fig:" + sChartTitel.ToString() + "}");
             result.AppendLine("\\end{figure}");
-            result.AppendLine("\\footnotetext{" + kwTest.ToString() + "}");
+
+            result.AppendLine("\\footnotelabeled{foot:" + sMapName + "_" + sChartTitel.ToString() + "}{" + kwTest.ToString() + "}");
             result.AppendLine();
             result.AppendLine();
 
