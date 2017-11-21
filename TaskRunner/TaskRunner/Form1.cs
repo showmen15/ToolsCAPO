@@ -25,6 +25,7 @@ namespace TaskRunner
         List<RunConfig> taskList = new List<RunConfig>();
         FreeScreenVideoRecorder recorder = new FreeScreenVideoRecorder();
 
+        bool ContinuWork;
         bool StopWork;
         Process process;
 
@@ -131,8 +132,12 @@ namespace TaskRunner
                         clearVisualizer();
                     }
                 }
+
+                if (ContinuWork)
+                    System.Threading.Thread.Sleep(1000);
+
             }
-            while (!StopWork && (taskList.Count > 0));
+            while ((!StopWork && (taskList.Count > 0)) || ContinuWork);
 
             butStop.Invoke(new Action(delegate ()
             {
@@ -238,6 +243,7 @@ namespace TaskRunner
             try
             {
                 StopWork = true;
+                ContinuWork = false;
 
                 butStop.Enabled = false;
                 butRun.Enabled = true;
@@ -329,6 +335,11 @@ namespace TaskRunner
         private void button3_Click(object sender, EventArgs e)
         {
             recorder.StopRecord();
+        }
+
+        private void chkConntinuesWorking_CheckedChanged(object sender, EventArgs e)
+        {
+            ContinuWork = chkConntinuesWorking.Checked;
         }
     }
 

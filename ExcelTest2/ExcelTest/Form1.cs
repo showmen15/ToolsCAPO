@@ -365,7 +365,8 @@ namespace ExcelTest
 
         private void ExportSimulationDataPDF()
         {
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI";
+            //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
 
             MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
             string sTempInputDir = string.Format("{0}\\TempInput", Environment.CurrentDirectory);
