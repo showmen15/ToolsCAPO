@@ -10,6 +10,8 @@ using SQLLibrary;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace TaskVisualizer
 {
@@ -217,6 +219,8 @@ namespace TaskVisualizer
 
         #endregion
 
+        private string RobotVisualizerOutputPath = "C:\\RobotVisualizer\\";
+
         private void button1_Click_1(object sender, EventArgs e)
         {
             //string filePath = @"C:\test\szsz\uuu.mp4";
@@ -305,5 +309,56 @@ namespace TaskVisualizer
             //stream3.Close();
         }
 
+        private void butRunConfiguration_Click(object sender, EventArgs e)
+        {
+            string exeFilePath;
+            visualizer = null;
+
+            string sFileMovePath;
+
+            taskList = ;//SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
+
+            foreach (VisualizerConfig item in taskList)
+            {
+                try
+                {
+                    exeFilePath = @".\PrintScreen\PrintScreen.jar";
+
+                    visualizer = new Process();
+
+                    visualizer.StartInfo.FileName = "java.exe";
+                    visualizer.StartInfo.Arguments = string.Format(" -jar {0} {1}", exeFilePath, item.ID_Case.ToString());
+
+                    visualizer.StartInfo.UseShellExecute = false;
+                    visualizer.StartInfo.CreateNoWindow = true;
+                    // process.StartInfo.RedirectStandardOutput = true;
+                    // process.StartInfo.RedirectStandardError = true;
+
+                    visualizer.Start();
+
+                    System.Threading.Thread.Sleep(700);
+
+                    GetPrintScrean();
+
+                }
+                catch (Exception ex)
+                {
+                    closeVisualizer();
+                }
+            }
+        }
+
+
+        private void GetPrintScrean(string sFilePath)
+        {
+            Bitmap printscreen = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
+            Graphics graphics = Graphics.FromImage(printscreen as Image);
+
+            graphics.CopyFromScreen(0, 0, 0, 0, printscreen.Size);
+
+            printscreen.Save(sFilePath, ImageFormat.Png);
+        }
+        
     }
 }
