@@ -53,6 +53,7 @@
     <Compile Include="MapItem.cs" />
     <Compile Include="RExporter.cs" />
     <Compile Include="RExporterResult.cs" />
+    <Compile Include="RExporterResultItem.cs" />
     <Compile Include="SQL.cs" />
     <Compile Include="ExcelExporter.cs" />
     <Compile Include="Form1.cs">
