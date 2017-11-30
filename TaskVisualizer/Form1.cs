@@ -316,7 +316,7 @@ namespace TaskVisualizer
 
             string sFileMovePath;
 
-            taskList = ;//SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
+            taskList = SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
 
             foreach (VisualizerConfig item in taskList)
             {
@@ -338,7 +338,7 @@ namespace TaskVisualizer
 
                     System.Threading.Thread.Sleep(700);
 
-                    GetPrintScrean();
+                    //GetPrintScrean();
 
                 }
                 catch (Exception ex)
