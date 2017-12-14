@@ -209,6 +209,17 @@ namespace ExcelTest
 
         private void button2_Click(object sender, EventArgs e)
         {
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI";
+            ExportExcel("Symulacja");
+
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
+            ExportExcel("Robot");
+
+            MessageBox.Show(this, "Excel file created , you can find the file");
+        }
+
+        private void ExportExcel(string prefix)
+        {
             MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
 
             foreach (var map in mapList)
@@ -226,20 +237,18 @@ namespace ExcelTest
 
                 }
 
-                string sOutputDir =  string.Format("{0}\\ExcelExport", Environment.CurrentDirectory);
+                string sOutputDir = string.Format("{0}\\ExcelExport", Environment.CurrentDirectory);
 
-                if(!Directory.Exists(sOutputDir))
+                if (!Directory.Exists(sOutputDir))
                     Directory.CreateDirectory(sOutputDir);
 
-                export.Save(string.Format("{1}\\{0}.xls", map.MapName, sOutputDir));
+                export.Save(string.Format("{1}\\{2}_{0}.xls", map.MapName, sOutputDir, prefix));
 
                 //export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
                 //export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
 
                 //export.Save("D:\\Desktop\\csharp-Excel12.xls");
             }
-
-            MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
 
