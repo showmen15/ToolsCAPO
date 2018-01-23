@@ -60,7 +60,51 @@ namespace ExcelTest
                 return result.ToArray();
             }
 
-            
+            private static void DeleteDunnStatistic(MapItem map, ConfigItem config)
+            {
+                checkConnection();
+                cmd.CommandText = @"DELETE FROM [dbo].[DunnValues] WHERE [ID_Map] = @ID_Map AND [ID_Config] = @ID_Config";
+
+                cmd.Parameters.AddWithValue("@ID_Map", map.ID_Map);
+                cmd.Parameters.AddWithValue("@ID_Config", config.ConfigID);
+
+                cmd.ExecuteNonQuery();
+            }
+
+            public static void InsertDunnStatistic(MapItem map, ConfigItem config, RExporterResultItem[] testResult)
+            {
+                DeleteDunnStatistic(map, config);
+
+                checkConnection();
+                cmd.CommandText = @"INSERT INTO [dbo].[DunnValues] ([ID_Map],[ID_Config],[Dunn_ID_Form],[Dunn_ID_To],[Dunn_Value],[Dunn_Desc],[Dunn_Test_Org],[Kw_Test_Org],[Kw_Test]) 
+                    VALUES(@ID_Map, @ID_Config, @Dunn_ID_Form, @Dunn_ID_To, @Dunn_Value, @Dunn_Desc,@Dunn_Test_Org,@Kw_Test_Org,@Kw_Test)";
+
+
+                cmd.Parameters.AddWithValue("@ID_Map", map.ID_Map);
+                cmd.Parameters.AddWithValue("@ID_Config", config.ConfigID);
+                
+
+                cmd.Parameters.Add("@Dunn_ID_Form", SqlDbType.Int);
+                cmd.Parameters.Add("@Dunn_ID_To", SqlDbType.Int);
+                cmd.Parameters.Add("@Dunn_Value", SqlDbType.Real);
+                cmd.Parameters.Add("@Dunn_Desc", SqlDbType.VarChar);
+                cmd.Parameters.Add("@Dunn_Test_Org", SqlDbType.VarChar);
+                cmd.Parameters.Add("@Kw_Test_Org", SqlDbType.VarChar);
+                cmd.Parameters.Add("@Kw_Test", SqlDbType.Real);                
+
+                foreach (var item in testResult)
+                {
+                    cmd.Parameters["@Dunn_ID_Form"].Value = item.Dunn_ID_Form;
+                    cmd.Parameters["@Dunn_ID_To"].Value = item.Dunn_ID_To;
+                    cmd.Parameters["@Dunn_Value"].Value = item.Dunn_Value;
+                    cmd.Parameters["@Dunn_Desc"].Value = item.Dunn_Desc;
+                    cmd.Parameters["@Dunn_Test_Org"].Value = item.Dunn_Test_Org;
+                    cmd.Parameters["@Kw_Test_Org"].Value = item.Kw_Test_org;
+                    cmd.Parameters["@Kw_Test"].Value = item.Kw_Test;
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

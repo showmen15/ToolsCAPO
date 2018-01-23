@@ -26,9 +26,9 @@ namespace ExcelTest
             InitializeComponent();
 
             //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
-          //  SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
 
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
+//            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
 
 
             // SQL.ConnectionString = @"data source=SZYMON-KOMPUTER;initial catalog=Doktorat;Integrated Security=SSPI;";
@@ -209,6 +209,17 @@ namespace ExcelTest
 
         private void button2_Click(object sender, EventArgs e)
         {
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI";
+            ExportExcel("Symulacja");
+
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
+            ExportExcel("Robot");
+
+            MessageBox.Show(this, "Excel file created , you can find the file");
+        }
+
+        private void ExportExcel(string prefix)
+        {
             MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
 
             foreach (var map in mapList)
@@ -226,20 +237,18 @@ namespace ExcelTest
 
                 }
 
-                string sOutputDir =  string.Format("{0}\\ExcelExport", Environment.CurrentDirectory);
+                string sOutputDir = string.Format("{0}\\ExcelExport", Environment.CurrentDirectory);
 
-                if(!Directory.Exists(sOutputDir))
+                if (!Directory.Exists(sOutputDir))
                     Directory.CreateDirectory(sOutputDir);
 
-                export.Save(string.Format("{1}\\{0}.xls", map.MapName, sOutputDir));
+                export.Save(string.Format("{1}\\{2}_{0}.xls", map.MapName, sOutputDir, prefix));
 
                 //export.Save(string.Format("\\\\dsview.pcoip.ki.agh.edu.pl\\Biblioteki-Pracownicy$\\szsz\\Desktop\\{0}.xls", map.MapName));
                 //export.Save(string.Format("D:\\Desktop\\{0}.xls", map.MapName));
 
                 //export.Save("D:\\Desktop\\csharp-Excel12.xls");
             }
-
-            MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
 
@@ -360,6 +369,8 @@ namespace ExcelTest
 
             //Export danych roboty
             ExportRobotDataPDF();
+
+             MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
 
@@ -419,6 +430,9 @@ namespace ExcelTest
 
                     RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel, map.ID_Map);
 
+                    RExporterResultItem[] testResult = chartAndTestResult.GetDunnTestResult();
+                    SQL.DataProviderExport.InsertDunnStatistic(map, itemConfigList[i], testResult);
+
                     File.Move(chartAndTestResult.ChartPath, sOutputPdfFile);
 
                     pdfsFile.Add(sOutputPdfFile);
@@ -434,7 +448,7 @@ namespace ExcelTest
                 File.AppendAllText(string.Format("{0}\\{1}", sOutputDir, sCombineNameTex), sLatexFile.ToString());
             }
 
-            MessageBox.Show(this, "Excel file created , you can find the file");
+          
         }
 
         private void ExportRobotDataPDF()
@@ -493,6 +507,9 @@ namespace ExcelTest
 
                     RExporterResult chartAndTestResult = r.GetChartPDFTest(ds, sChartTitel, map.ID_Map);
 
+                    RExporterResultItem[] testResult = chartAndTestResult.GetDunnTestResult();
+                    SQL.DataProviderExport.InsertDunnStatistic(map, itemConfigList[i], testResult);
+
                     File.Move(chartAndTestResult.ChartPath, sOutputPdfFile);
 
                     pdfsFile.Add(sOutputPdfFile);
@@ -508,7 +525,7 @@ namespace ExcelTest
                 File.AppendAllText(string.Format("{0}\\{1}", sOutputDir, sCombineNameTex), sLatexFile.ToString());
             }
 
-            MessageBox.Show(this, "Excel file created , you can find the file");
+          //  MessageBox.Show(this, "Excel file created , you can find the file");
         }
 
         private DataSet removeUnnecessaryData(DataSet input, int id_Map)
@@ -605,6 +622,9 @@ namespace ExcelTest
             }
         }
 
+        private void butDunnTest_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
