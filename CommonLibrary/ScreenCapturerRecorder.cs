@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -34,6 +35,8 @@ namespace CommonLibrary
 
         private string sFileMovePath;
 
+        private VisualizerConfig vConfig;
+
         public ScreenCapturerRecorder()
         {
             init();
@@ -48,10 +51,20 @@ namespace CommonLibrary
             //sFFmpegPath = //string.Format(@"{0}configuration_setup_utility\vendor\ffmpeg\bin\ffmpeg.exe", sFFmpegPath);
         }
 
+        public void StartRecord(RunConfig item)
+        {
+            VisualizerConfig it = new VisualizerConfig(item.ID_Case, 0, "", item.Name_Case, item.Name_Config, item.Name_Map, item.Name_Program, "");
+
+            StartRecord(it);
+        }
+
+
         public void StartRecord(VisualizerConfig item)
         {
-            //string sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", item.Name_Map, item.Name_Program, item.Name_Config, item.ID_Trials); 
-            string sNewFileName = string.Format("{0}_{1}_{2}.mp4", item.Name_Map, item.Name_Program, item.Name_Config); //bez trials
+            vConfig = item;
+
+            string sNewFileName = string.Format("{0}_{1}_{2}_{3}.mp4", item.Name_Map, item.Name_Program, item.Name_Config, item.ID_Trials); 
+            //string sNewFileName = string.Format("{0}_{1}_{2}.mp4", item.Name_Map, item.Name_Program, item.Name_Config); //bez trials
             string sFileOutputDirectory = string.Format("{0}\\{1}\\{2}\\{3}", movieDirectoryOutput, item.Name_Map, item.Name_Program, item.Name_Config);
 
             if (!System.IO.File.Exists(sFileOutputDirectory))
@@ -83,6 +96,8 @@ namespace CommonLibrary
                 recorder = null;
             }
 
+            addExtensions();
+
             return sFileMovePath;
         }
 
@@ -90,6 +105,47 @@ namespace CommonLibrary
         {
 
         }
+
+        private void addExtensions()
+        {
+            string titel = Path.GetFileNameWithoutExtension(sFileMovePath);
+            string[] tags = vConfig.GetDiscription();
+
+            addDiscriptionToFile(sFileMovePath, titel, tags, vConfig.IdGlobal);
+        }
+
+        private void addDiscriptionToFile(string filePath, string titel, string[] tags, string comment)
+        {
+            var file = ShellFile.FromFilePath(filePath);
+
+            file.Properties.System.Title.Value = titel;
+            file.Properties.System.Comment.Value = comment;
+
+            file.Properties.System.Media.Year.Value = 2017;
+
+            using (var writer = file.Properties.GetPropertyWriter())
+            {
+                writer.WriteProperty(file.Properties.System.Keywords, tags, true);
+                writer.Close();
+            }
+
+            file.Properties.System.Author.Value = new string[] { "Szymon Szomiński" };
+            
+
+            // Read and Write:
+
+            //foreach (var item in file.Properties.DefaultPropertyCollection)
+            //{
+            //    ShellProperty<uint?> porp = item as ShellProperty<uint?>;
+
+            //    if (porp != null)
+            //    {
+
+            //        Console.WriteLine(string.Format("{0} Value: {1}", "", porp.Value.ToString()));
+            //    }
+            //}
+        }
+
 
         private void StopProgram(Process proc)
         {
@@ -115,8 +171,7 @@ namespace CommonLibrary
         public bool IsNotWorking()
         {
             //return true;
-
-           if (recorder != null && recorder.HasExited)
+            if (recorder != null && recorder.HasExited)
                 return true;
             else
                 return false;

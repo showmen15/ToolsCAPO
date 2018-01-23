@@ -43,6 +43,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.butBeep = new System.Windows.Forms.Button();
             this.butRunConfiguration = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.txtLog = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtServerName
@@ -178,11 +180,31 @@
             this.butRunConfiguration.UseVisualStyleBackColor = true;
             this.butRunConfiguration.Click += new System.EventHandler(this.butRunConfiguration_Click);
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(137, 98);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 31;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // txtLog
+            // 
+            this.txtLog.Location = new System.Drawing.Point(12, 138);
+            this.txtLog.Multiline = true;
+            this.txtLog.Name = "txtLog";
+            this.txtLog.Size = new System.Drawing.Size(337, 85);
+            this.txtLog.TabIndex = 32;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(361, 133);
+            this.ClientSize = new System.Drawing.Size(361, 235);
+            this.Controls.Add(this.txtLog);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.butRunConfiguration);
             this.Controls.Add(this.butBeep);
             this.Controls.Add(this.button1);
@@ -219,6 +241,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button butBeep;
         private System.Windows.Forms.Button butRunConfiguration;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox txtLog;
     }
 }
 

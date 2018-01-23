@@ -23,7 +23,7 @@ namespace TaskRunner
         
         Task runnerTask;
         List<RunConfig> taskList = new List<RunConfig>();
-        FreeScreenVideoRecorder recorder = new FreeScreenVideoRecorder();
+        ScreenCapturerRecorder recorder = new ScreenCapturerRecorder();
 
         bool ContinuWork;
         bool StopWork;
@@ -42,6 +42,7 @@ namespace TaskRunner
         {
             string exeFilePath;
             process = null;
+            string sFileMovePath;
 
             do
             {
@@ -65,7 +66,7 @@ namespace TaskRunner
 
                         if (chkRecord.Checked)
                         {
-                            recorder.StartRecord();
+                            recorder.StartRecord(item);
                         }
 
                         exeFilePath = getProgramPath(item.ID_Program);
@@ -106,8 +107,12 @@ namespace TaskRunner
 
                         if (chkRecord.Checked)
                         {
-                            recorder.StopRecord();
-                            recorder.RenameRecordedFile1(item);
+                            // recorder.StopRecord();
+                            // recorder.RenameRecordedFile1(item);
+
+                            sFileMovePath = recorder.StopRecord();
+
+                            setCaseDisable(item.ID_Case); //dla wizualizacji nie osiagalnych przypadkow
                         }
 
                         if (chkVisualizer.Checked)
@@ -218,7 +223,7 @@ namespace TaskRunner
 
                 using (SqlCommand cmd = new SqlCommand("", con))
                 {
-                    cmd.CommandText = "SELECT top 10 ID_Program,Timeout,ID_Case,Name_Case,VisualizerID, Name_Program, Name_Map, Name_Config FROM dbo.TasksList ORDER BY ID_Config,id_trials,ID_Program";
+                    cmd.CommandText = "SELECT top 1000 ID_Program,Timeout,ID_Case,Name_Case,VisualizerID, Name_Program, Name_Map, Name_Config FROM dbo.TasksList ORDER BY ID_Config,id_trials,ID_Program";
 
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
@@ -236,6 +241,31 @@ namespace TaskRunner
             }
 
             return tasks;
+        }
+
+
+        private void setCaseDisable(int id_case)
+        {
+            string sConnectionString = string.Empty;
+
+            txtServerName.Invoke(new Action(delegate ()
+            {
+                sConnectionString = string.Format("Server={0};Database=Doktorat;User Id={1};Password={2};", txtServerName.Text, txtUser.Text, txtPassword.Text);
+            }));
+
+
+            using (SqlConnection con = new SqlConnection(sConnectionString))
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("", con))
+                {
+                    cmd.CommandText = "update dbo.[Case] set IsActive = 0 where ID_Case = @ID_Case ";
+                    cmd.Parameters.AddWithValue("@ID_Case", id_case);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         private void butStop_Click(object sender, EventArgs e)
@@ -329,7 +359,7 @@ namespace TaskRunner
 
         private void button2_Click(object sender, EventArgs e)
         {
-            recorder.StartRecordWindow();
+           // recorder.StartRecordWindow();
         }
 
         private void button3_Click(object sender, EventArgs e)

@@ -34,7 +34,7 @@ namespace TaskVisualizer
             InitializeComponent();
 
             timerRecorderWorking.Stop();
-            txtServerName.SelectedIndex = 2;
+            txtServerName.SelectedIndex = 1;
         }
 
         private void initDB(string sServerName, string sUser, string sPass)
@@ -60,7 +60,7 @@ namespace TaskVisualizer
                         lblCaseName.Text = String.Format("CaseID: {0}, CaseName: {1}, Program: {2}, Trials: {3}", item.ID_Case, item.Name_Case, item.Name_Program, item.ID_Trials);
                     }));
 
-                    
+
 
                     exeFilePath = @".\Visualizer\OfflineVisualizer.jar";
 
@@ -75,7 +75,7 @@ namespace TaskVisualizer
                     // process.StartInfo.RedirectStandardError = true;
 
                     visualizer.Start();
-                   
+
 
                     System.Threading.Thread.Sleep(700);
 
@@ -92,10 +92,11 @@ namespace TaskVisualizer
                     {
                         // recorder.RenameRecordedFileVisualizer(item);
 
-                        string titel = Path.GetFileNameWithoutExtension(sFileMovePath);
+                       /* string titel = Path.GetFileNameWithoutExtension(sFileMovePath);
                         string[] tags = item.GetDiscription();
 
                         addDiscriptionToFile(sFileMovePath, titel, tags, item.IdGlobal);
+                        */
 
                         SQL.DataProviderTaskVisualizer.SetVisualizerConfigAsDone(item);
                     }
@@ -166,8 +167,16 @@ namespace TaskVisualizer
 
         private void checkFreeScreenVideoRecorderWorking()
         {
-            if (recorder.IsNotWorking())
-                Beep(2500, 1000);
+            try
+            {
+                if (recorder.IsNotWorking())
+                    Beep(2500, 1000);
+            }
+
+            catch (InvalidOperationException ex)
+            {
+                txtLog.Text += ex.Message + "\n";
+            }
         }
 
         private void txtServerName_SelectedIndexChanged(object sender, EventArgs e)
@@ -316,7 +325,7 @@ namespace TaskVisualizer
 
             string sFileMovePath;
 
-            taskList = ;//SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
+            taskList = SQL.DataProviderTaskVisualizer.GetVisualizerConfig();
 
             foreach (VisualizerConfig item in taskList)
             {
@@ -338,7 +347,7 @@ namespace TaskVisualizer
 
                     System.Threading.Thread.Sleep(700);
 
-                    GetPrintScrean();
+                  //  GetPrintScrean();
 
                 }
                 catch (Exception ex)
@@ -352,13 +361,20 @@ namespace TaskVisualizer
         private void GetPrintScrean(string sFilePath)
         {
             Bitmap printscreen = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            printscreen.SetResolution(300, 300);
 
             Graphics graphics = Graphics.FromImage(printscreen as Image);
 
+            
             graphics.CopyFromScreen(0, 0, 0, 0, printscreen.Size);
 
-            printscreen.Save(sFilePath, ImageFormat.Png);
+            printscreen.Save(sFilePath, ImageFormat.Tiff);
         }
-        
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            GetPrintScrean("C:\\RobotVisualizer\\test.tiff");
+        }
     }
 }
