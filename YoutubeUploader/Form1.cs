@@ -59,46 +59,80 @@ namespace YoutubeUploader
 
         private void mangeMovie()
         {
-            string sMovieDirectory = @"C:\testDoc\PHD";
-            FileItem.ParrentDirecotry = "Video/Simulation"; //zmieniac w zaleznosci od tego co exportujemy Simulation | Robot | Visualization 
+            try
+            {
+                string sMovieDirectory = @"C:\testDoc\PHD";
+                FileItem.ParrentDirecotry = "Video/Simulation"; //zmieniac w zaleznosci od tego co exportujemy Simulation | Robot | Visualization 
 
-            renameMovie(sMovieDirectory); //standaryzacja nazw plików
-            uploadMovie(sMovieDirectory); //wysłanie na youtuba
+                //renameMovie(sMovieDirectory); //standaryzacja nazw plików
 
-            List<MapItem> item = loadFileData(sMovieDirectory);
+                uploadMovie(sMovieDirectory); //wysłanie na youtuba
 
-            string output = createTable(item);
+                List<MapItem> item = loadFileData(sMovieDirectory); //pobranie informacji z katalogów o plikach wysłanych na youtuba
+
+                string output = createTable(item); //tworzenie tabeli 
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(this, ex.Message.ToString(),  "Bład przetwarzania danych", MessageBoxButtons.OK ,MessageBoxIcon.Error);
+            }
+
+            MessageBox.Show(this, "Wykonano!!!", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
 
         private void uploadMovie(string sFileDirectory)
         {
-            string idUpload;
-            string[] sFilePath = System.IO.Directory.GetFiles(sFileDirectory, "*.mp4*", System.IO.SearchOption.AllDirectories);
-            GoogleYoutubeUploader.YoutubeUploader upload = new GoogleYoutubeUploader.YoutubeUploader();
-
-            string filePath;
-            string Title;
-            string Description;
-            string[] Tags = null;
-
-            foreach (var item in sFilePath)
+            try
             {
-                filePath = item;
-                Title = Path.GetFileName(item); // //"Otwarta przestrzeń PF+ 8-1";
-                Description = "";
-                Tags = null;
+                string idUpload;
+                List<string> sFilePath = new List<string>(System.IO.Directory.GetFiles(sFileDirectory, "*.mp4*", System.IO.SearchOption.AllDirectories));
 
-                idUpload = upload.YoutubeUpload(filePath, Title, Description, Tags);
+                sFilePath = removeUploded(sFilePath);
 
-                setFileUrl(item, idUpload);
+                string filePath;
+                string Title;
+                string Description;
+                string[] Tags = null;
+
+                foreach (var item in sFilePath)
+                {
+                    GoogleYoutubeUploader.YoutubeUploader upload = new GoogleYoutubeUploader.YoutubeUploader();
+
+                    filePath = item;
+                    Title = Path.GetFileName(item); // //"Otwarta przestrzeń PF+ 8-1";
+                    Description = "";
+                    Tags = null;
+
+                    idUpload = upload.YoutubeUpload(filePath, Title, Description, Tags);
+
+                    setFileUrl(item, idUpload);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
+        }
+
+        private List<string> removeUploded(List<string> sFilePath)
+        {
+            for(int i = 0; i < sFilePath.Count(); i++)
+            {
+                var file = ShellFile.FromFilePath(sFilePath[i]);
+
+                if(!string.IsNullOrWhiteSpace(file.Properties.System.Media.AuthorUrl.Value))
+                    sFilePath.RemoveAt(i);
+            }
+
+            return sFilePath;
         }
 
         private void setFileUrl(string sFilePath,string idUpload)
         {
             var file = ShellFile.FromFilePath(sFilePath);
 
-            file.Properties.System.Media.AuthorUrl.Value = string.Format("https://youtu.be/{0}",  idUpload);
+            file.Properties.System.Media.AuthorUrl.Value = string.Format("https://youtu.be/{0}", idUpload);
         }
 
         private void renameMovie(string sFileDirectory)

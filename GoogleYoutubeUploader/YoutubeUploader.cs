@@ -38,7 +38,9 @@ namespace GoogleYoutubeUploader
 
         private async Task run(string filePath, string Title, string Description, string[] Tags)
         {
-                UserCredential credential;
+            sFileID = string.Empty;
+
+            UserCredential credential;
 
                 using (var stream = new FileStream("client_secrets.json", FileMode.Open, FileAccess.Read))
                 {
