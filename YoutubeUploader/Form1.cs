@@ -59,7 +59,7 @@ namespace YoutubeUploader
 
         private void mangeMovie()
         {
-            string sMovieDirectory = @"C:\testDoc\PHD";
+            string sMovieDirectory = @"C:\Wysyłka\PHD";
             FileItem.ParrentDirecotry = "Video/Simulation"; //zmieniac w zaleznosci od tego co exportujemy Simulation | Robot | Visualization 
 
             renameMovie(sMovieDirectory); //standaryzacja nazw plików
@@ -68,6 +68,8 @@ namespace YoutubeUploader
             List<MapItem> item = loadFileData(sMovieDirectory);
 
             string output = createTable(item);
+
+            File.AppendAllText(".\\output.txt", output);
         }
 
         private void uploadMovie(string sFileDirectory)
