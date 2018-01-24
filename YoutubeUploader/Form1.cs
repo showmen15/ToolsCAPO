@@ -61,7 +61,7 @@ namespace YoutubeUploader
         {
             try
             {
-                string sMovieDirectory = @"C:\testDoc\PHD";
+                string sMovieDirectory = @"C:\Wysyłka\PHD";
                 FileItem.ParrentDirecotry = "Video/Simulation"; //zmieniac w zaleznosci od tego co exportujemy Simulation | Robot | Visualization 
 
                 //renameMovie(sMovieDirectory); //standaryzacja nazw plików
@@ -71,6 +71,8 @@ namespace YoutubeUploader
                 List<MapItem> item = loadFileData(sMovieDirectory); //pobranie informacji z katalogów o plikach wysłanych na youtuba
 
                 string output = createTable(item); //tworzenie tabeli 
+
+                File.AppendAllText(".\\output.txt", output);
             }
             catch(Exception ex)
             {
@@ -79,7 +81,7 @@ namespace YoutubeUploader
 
             MessageBox.Show(this, "Wykonano!!!", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-        }
+        }   
 
         private void uploadMovie(string sFileDirectory)
         {
@@ -95,6 +97,8 @@ namespace YoutubeUploader
                 string Description;
                 string[] Tags = null;
 
+                int i = 0;
+
                 foreach (var item in sFilePath)
                 {
                     GoogleYoutubeUploader.YoutubeUploader upload = new GoogleYoutubeUploader.YoutubeUploader();
@@ -106,7 +110,12 @@ namespace YoutubeUploader
 
                     idUpload = upload.YoutubeUpload(filePath, Title, Description, Tags);
 
-                    setFileUrl(item, idUpload);
+                    if (!string.IsNullOrWhiteSpace(idUpload))
+                        setFileUrl(item, idUpload);
+
+                    i++;
+
+                    System.Console.Out.WriteLine(string.Format("Wysłano już: {0}", i.ToString()));
                 }
             }
             catch (Exception ex)
@@ -117,15 +126,17 @@ namespace YoutubeUploader
 
         private List<string> removeUploded(List<string> sFilePath)
         {
-            for(int i = 0; i < sFilePath.Count(); i++)
+            List<string> result = new List<string>();
+
+            for (int i = 0; i < sFilePath.Count(); i++)
             {
                 var file = ShellFile.FromFilePath(sFilePath[i]);
 
-                if(!string.IsNullOrWhiteSpace(file.Properties.System.Media.AuthorUrl.Value))
-                    sFilePath.RemoveAt(i);
+                if(string.IsNullOrWhiteSpace(file.Properties.System.Media.AuthorUrl.Value))
+                    result.Add(sFilePath[i]);
             }
 
-            return sFilePath;
+            return result;
         }
 
         private void setFileUrl(string sFilePath,string idUpload)
@@ -357,6 +368,22 @@ namespace YoutubeUploader
             file.AppendLine();
 
             return file.ToString();
-        }		
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            string sMovieDirectory = @"C:\Wysyłka\PHD";
+
+            List<string> sFilePath = new List<string>(System.IO.Directory.GetFiles(sMovieDirectory, "*.mp4*", System.IO.SearchOption.AllDirectories));
+
+            foreach (var item in sFilePath)
+            {
+
+                var file = ShellFile.FromFilePath(item);
+
+                file.Properties.System.Media.AuthorUrl.Value = string.Empty;
+
+            }
+        }
     }
 }
