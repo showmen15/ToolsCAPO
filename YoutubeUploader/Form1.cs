@@ -385,5 +385,28 @@ namespace YoutubeUploader
 
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            urlShortcutToDesktop("g2", "http://www.google.com/");
+        }
+
+        private void urlShortcutToDesktop(string linkName, string linkUrl)
+        {
+            string deskDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+            List<string> sFilePath = new List<string>(System.IO.Directory.GetFiles(deskDir, "*.url", System.IO.SearchOption.AllDirectories));
+
+            using (StreamWriter writer = new StreamWriter(deskDir + "\\" + linkName + ".url"))
+            {
+                writer.WriteLine("[{000214A0-0000-0000-C000-000000000046}]");
+                writer.WriteLine("Prop3=19,2");
+                writer.WriteLine("[InternetShortcut]");
+                writer.WriteLine("URL=" + linkUrl);
+                writer.WriteLine("IDList=");
+                writer.WriteLine();
+                writer.Flush();
+            }
+        }
     }
 }
