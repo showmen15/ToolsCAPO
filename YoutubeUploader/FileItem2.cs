@@ -32,7 +32,11 @@ namespace YoutubeUploader
 
             string sLinkName = string.Format("{0}\\{1}.url", sDirName, sFileName);
 
-            return "";
+            string[] lines = File.ReadAllLines(sLinkName);
+
+            string line = lines[4].Replace("URL=", string.Empty);
+
+            return line;
         }
 
         public string GetPathCD
