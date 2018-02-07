@@ -732,5 +732,24 @@ namespace YoutubeUploader
                 writer.Flush();
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            string sMovieDirectory = @"C:\testDoc\PHD1\PHD\PHD";
+
+            List<string> sFilePath = new List<string>(System.IO.Directory.GetFiles(sMovieDirectory, "*.mp4*", System.IO.SearchOption.AllDirectories));
+
+            foreach (var item in sFilePath)
+            {
+                var file = ShellFile.FromFilePath(item);
+                string url = file.Properties.System.Media.AuthorUrl.Value;
+
+                string sLinkLocation = string.Format(@"{0}\{1}.url", Path.GetDirectoryName(item), Path.GetFileNameWithoutExtension(item));
+
+                urlShortcutLocation(sLinkLocation, url);
+            }
+
+        }
     }
 }

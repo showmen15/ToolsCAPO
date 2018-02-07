@@ -34,7 +34,7 @@ namespace YoutubeUploader
 
             string[] lines = File.ReadAllLines(sLinkName);
 
-            string line = lines[4].Replace("URL=", string.Empty);
+            string line = lines[3].Replace("URL=", string.Empty);
 
             return line;
         }
