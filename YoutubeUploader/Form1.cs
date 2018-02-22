@@ -751,5 +751,82 @@ namespace YoutubeUploader
             }
 
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            StringBuilder result = new StringBuilder();
+
+            string sSymulacjaPath = "Materiały wideo\\Symulacja";
+            string sRobotPath = "Materiały wideo\\Roboty";
+
+            string sMovieDirectory = @"C:\Doktorat";
+            string sMovieDirectorySymulacja = string.Format("{0}\\{1}", sMovieDirectory, sSymulacjaPath);
+            string sMovieDirectoryRobot = string.Format("{0}\\{1}", sMovieDirectory, sRobotPath);
+           
+            List<string> sFilePathSymulacja = new List<string>(System.IO.Directory.GetFiles(sMovieDirectorySymulacja, "*.mp4*", System.IO.SearchOption.AllDirectories));
+            List<string> sFilePathRoboty = new List<string>(System.IO.Directory.GetFiles(sMovieDirectoryRobot, "*.avi*", System.IO.SearchOption.AllDirectories));
+
+            result.AppendLine("% Symulacja ");
+
+            foreach (var sim in sFilePathSymulacja)
+            {
+                string dirName = Path.GetDirectoryName(sim);
+                string sFileName = Path.GetFileNameWithoutExtension(sim);
+
+                string sUrlPath = string.Format("{0}\\{1}.url", dirName, sFileName);
+
+                string sUrl = FileItem2.getFileUrl(sUrlPath);
+
+                string sOutDir = sim.Replace(@"C:\Doktorat\", string.Empty);
+                sOutDir = sOutDir.Replace("\\", "/");
+
+
+                string sFormatedMP4 = formatLookupPut(Path.GetFileName(sim), string.Format("run:{0}", sOutDir));
+                string sFormatedURL = formatLookupPut(string.Format("{0}.url", Path.GetFileNameWithoutExtension(sim)), sUrl);
+
+                result.AppendLine(sFormatedMP4);
+                result.AppendLine(sFormatedURL);
+                result.AppendLine();
+            }
+
+            result.AppendLine();
+            result.AppendLine();
+            result.AppendLine("% Robot ");
+
+            foreach (var sim in sFilePathRoboty)
+            {
+                string dirName = Path.GetDirectoryName(sim);
+                string sFileName = Path.GetFileNameWithoutExtension(sim);
+
+                string sUrlPath = string.Format("{0}\\{1}.url", dirName, sFileName);
+
+                string sUrl = FileItem2.getFileUrl(sUrlPath);
+
+                string sOutDir = sim.Replace(@"C:\Doktorat\", string.Empty);
+                sOutDir = sOutDir.Replace("\\", "/");
+
+                string sFormatedAVI = formatLookupPut(string.Format("Robot {0}", Path.GetFileName(sim)), string.Format("run:{0}", sOutDir));
+                string sFormatedURL = formatLookupPut(string.Format("Robot {0}.url", Path.GetFileNameWithoutExtension(sim)), sUrl);
+
+                result.AppendLine(sFormatedAVI);
+                result.AppendLine(sFormatedURL);
+                result.AppendLine();
+            }
+
+
+            string temp = result.ToString();
+        }
+
+        private string formatLookupPut(string sKey,string sValue)
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append(@"\lookupPut{");
+            result.Append(sKey);
+            result.Append(@"}{");
+            result.Append(sValue);
+            result.Append("}");
+
+            return result.ToString();    
+        }
     }
 }

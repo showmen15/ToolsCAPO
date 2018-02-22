@@ -25,7 +25,7 @@ namespace YoutubeUploader
             }
         }
 
-        private string getFileUrl(string sFilePath)
+        public static string getFileUrl(string sFilePath)
         {
             string sFileName = Path.GetFileNameWithoutExtension(sFilePath);
             string sDirName = Path.GetDirectoryName(sFilePath);
