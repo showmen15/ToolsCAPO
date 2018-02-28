@@ -53,8 +53,8 @@ namespace YoutubeUploader
             //  uploadMovie(sMovieDirectory); //wysłanie na youtuba
 
 
-            // mangeMovie(); //Dla *.mp4
-            mangeMovieRobot(); //dla *.avi
+             mangeMovie(); //Dla *.mp4
+            //mangeMovieRobot(); //dla *.avi
         }
 
 
@@ -62,10 +62,10 @@ namespace YoutubeUploader
         {
             try
             {
-                string sMovieDirectory = @"C:\Wysyłka\PHD";
+                string sMovieDirectory = @"C:\Doktorat\Youtube";
                 FileItem.ParrentDirecotry = "Video/Simulation"; //zmieniac w zaleznosci od tego co exportujemy Simulation | Robot | Visualization 
 
-                //renameMovie(sMovieDirectory); //standaryzacja nazw plików
+                renameMovie(sMovieDirectory); //standaryzacja nazw plików
 
                 uploadMovie(sMovieDirectory); //wysłanie na youtuba
 
@@ -279,6 +279,36 @@ namespace YoutubeUploader
                 string newFileName = string.Format("{0}\\{1} {2} {3}.avi", FileDir, DirMap, DirAlgorytm, DirCase);
 
                 System.IO.File.Move(item, newFileName);
+            }
+        }
+
+        //private void renameURL(string sFileDirectory)
+        //{
+        //    string[] allfiles = System.IO.Directory.GetFiles(sFileDirectory, "*.url", System.IO.SearchOption.AllDirectories);
+        //    string sOutput;
+
+        //    foreach (var item in allfiles)
+        //    {
+        //        sOutput = Path.GetFileName(item);
+
+        //        sOutput = sOutput.Replace("ń", "n").Replace("ż", "z").Replace("ś", "s").Replace("ó", "o").Replace("ę", "e").Replace("ą", "a");
+
+        //        System.IO.File.Move(item, string.Format("{0}\\{1}", Path.GetDirectoryName(item), sOutput));
+        //    }
+        //}
+
+        private void renameURL(string sFileDirectory, string pattern)
+        {
+            string[] allfiles = System.IO.Directory.GetFiles(sFileDirectory, pattern, System.IO.SearchOption.AllDirectories);
+            string sOutput;
+
+            foreach (var item in allfiles)
+            {
+                sOutput = Path.GetFileName(item);
+
+                sOutput = sOutput.Replace("ń", "n").Replace("ż", "z").Replace("ś", "s").Replace("ó", "o").Replace("ę", "e").Replace("ą", "a");
+
+                System.IO.File.Move(item, string.Format("{0}\\{1}", Path.GetDirectoryName(item), sOutput));
             }
         }
 
@@ -736,7 +766,7 @@ namespace YoutubeUploader
         private void button4_Click(object sender, EventArgs e)
         {
 
-            string sMovieDirectory = @"C:\testDoc\PHD1\PHD\PHD";
+            string sMovieDirectory = @"C:\Doktorat\Youtube";
 
             List<string> sFilePath = new List<string>(System.IO.Directory.GetFiles(sMovieDirectory, "*.mp4*", System.IO.SearchOption.AllDirectories));
 
@@ -756,8 +786,8 @@ namespace YoutubeUploader
         {
             StringBuilder result = new StringBuilder();
 
-            string sSymulacjaPath = "Materiały wideo\\Symulacja";
-            string sRobotPath = "Materiały wideo\\Roboty";
+            string sSymulacjaPath = "Materialy wideo\\Symulacja";
+            string sRobotPath = "Materialy wideo\\Roboty";
 
             string sMovieDirectory = @"C:\Doktorat";
             string sMovieDirectorySymulacja = string.Format("{0}\\{1}", sMovieDirectory, sSymulacjaPath);
@@ -827,6 +857,27 @@ namespace YoutubeUploader
             result.Append("}");
 
             return result.ToString();    
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string sMovieDirectory = @"C:\Doktorat\Youtube";
+
+            renameURL(sMovieDirectory, "*.url");
+            renameURL(sMovieDirectory, "*.mp4");
+
+           // sMovieDirectory = @"C:\Doktorat\Materialy wideo\Roboty";
+            //renameURL(sMovieDirectory, "*.url");
+            //renameURL(sMovieDirectory, "*.avi");
+
+
+
+
+            // renameMovie(sMovieDirectory); //standaryzacja nazw plików
+
+            // sMovieDirectory = @"C:\testDoc\PHD2\Robot\Robot";
+
+            // renameMovieRobot(sMovieDirectory);
         }
     }
 }
