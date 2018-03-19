@@ -70,10 +70,10 @@ namespace GoogleYoutubeUploader
 
                 video.Snippet.CategoryId = "22"; // See https://developers.google.com/youtube/v3/docs/videoCategories/list
                 video.Status = new VideoStatus();
-                video.Status.PrivacyStatus = "unlisted"; // or "private" or "public"
+                video.Status.PrivacyStatus = "public"; // or "private" or "public" or "unlisted"
                                                          //var filePath = @"C:\git\youtube\Test.mp4"; //@"REPLACE_ME.mp4"; // Replace with path to actual movie file.
 
-                using (var fileStream = new FileStream(filePath, FileMode.Open))
+            using (var fileStream = new FileStream(filePath, FileMode.Open))
                 {
                     var videosInsertRequest = youtubeService.Videos.Insert(video, "snippet,status", fileStream, "video/*");
                     videosInsertRequest.ProgressChanged += videosInsertRequest_ProgressChanged;
