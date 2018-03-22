@@ -42,7 +42,7 @@ namespace ExcelTest
             }
 
 
-            public static MapItem[] GetExportMapList()                
+            public static MapItem[] GetExportMapList()
             {
                 List<MapItem> result = new List<MapItem>();
 
@@ -82,7 +82,7 @@ namespace ExcelTest
 
                 cmd.Parameters.AddWithValue("@ID_Map", map.ID_Map);
                 cmd.Parameters.AddWithValue("@ID_Config", config.ConfigID);
-                
+
 
                 cmd.Parameters.Add("@Dunn_ID_Form", SqlDbType.Int);
                 cmd.Parameters.Add("@Dunn_ID_To", SqlDbType.Int);
@@ -90,7 +90,7 @@ namespace ExcelTest
                 cmd.Parameters.Add("@Dunn_Desc", SqlDbType.VarChar);
                 cmd.Parameters.Add("@Dunn_Test_Org", SqlDbType.VarChar);
                 cmd.Parameters.Add("@Kw_Test_Org", SqlDbType.VarChar);
-                cmd.Parameters.Add("@Kw_Test", SqlDbType.Real);                
+                cmd.Parameters.Add("@Kw_Test", SqlDbType.Real);
 
                 foreach (var item in testResult)
                 {
@@ -104,6 +104,23 @@ namespace ExcelTest
 
                     cmd.ExecuteNonQuery();
                 }
+            }
+
+            public static DataTable GetAVGExportResult(int ID_Map,bool allAlgorytm)
+            {
+                DataTable result = new DataTable();
+                checkConnection();
+
+                if (allAlgorytm)
+                    cmd.CommandText = @"select Name,[R],[PF],[RVO],[PR],[R+],[PF+] from [ReportResultAVG] where id_map = @ID_Map";
+                else
+                    cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from [ReportResultAVG] where id_map = @ID_Map";
+
+                cmd.Parameters.AddWithValue("@ID_Map", ID_Map);
+
+                result.Load(cmd.ExecuteReader());
+
+                return result;
             }
         }
     }

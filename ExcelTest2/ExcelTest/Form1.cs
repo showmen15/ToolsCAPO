@@ -626,5 +626,136 @@ namespace ExcelTest
         {
 
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+            //Export danych symulacyjnych
+            ExportAVGSimulationDataPDF();
+
+            //Export danych roboty
+            ExportAVGRobotDataPDF();
+
+            MessageBox.Show(this, "Excel file created , you can find the file");
+
+        }
+
+        private void ExportAVGRobotDataPDF()
+        {
+            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI";
+            //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
+
+            MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
+            StringBuilder tableResult = new StringBuilder();
+
+
+            foreach (var item in mapList)
+            {
+                System.Data.DataTable result;
+                
+
+                if (item.ID_Map == 11)
+                    result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, true);
+                else
+                    result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, false);
+
+                string formatedTable = formatAVGTable(result,item.MapName);
+
+                tableResult.AppendLine();
+                tableResult.AppendLine(string.Format("%{0}", item.MapName));
+
+                tableResult.AppendLine(formatedTable);
+                tableResult.AppendLine();
+            }
+        }
+
+        private void ExportAVGSimulationDataPDF()
+        {
+           
+        }
+
+
+        private string formatAVGTable(System.Data.DataTable data, string sTableName)
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.AppendLine(@"\begin{table}[!ht");
+            result.AppendLine(@"	\caption{" + sTableName + "}");
+
+            if (data.Columns.Count == 5)
+                result.AppendLine(@"\begin{tabular}{|l|l|l|l|l|}");
+            else if (data.Columns.Count == 7)
+                result.AppendLine(@"\begin{tabular}{|l|l|l|l|l|}");
+
+            result.AppendLine(@"		\hline");
+
+            //Dodanie naglowka kolumn
+            string temp = string.Empty;
+
+            if (data.Columns.Count == 5)
+                temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline", data.Columns[0].ColumnName,
+                                         data.Columns["R"].ColumnName,
+                                         data.Columns["RVO"].ColumnName,
+                                         data.Columns["PR"].ColumnName,
+                                         data.Columns["R+"].ColumnName);
+            else if (data.Columns.Count == 7)
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6}\\\\ \\hline \\hline", data.Columns[0].ColumnName,
+                                             data.Columns["R"].ColumnName,
+                                             data.Columns["PF"].ColumnName,
+                                             data.Columns["RVO"].ColumnName,
+                                             data.Columns["PR"].ColumnName,
+                                             data.Columns["R+"].ColumnName,
+                                             data.Columns["PF+"].ColumnName);
+
+            result.AppendLine(temp);
+
+            for (int i = 0; i < data.Rows.Count; i++)
+            {
+                int minValue;
+
+                minValue = Math.Min(data.Rows[i]["R"].GetValue<int>(int.MaxValue), data.Rows[i]["RVO"].GetValue<int>(int.MaxValue));
+                minValue = Math.Min(minValue, data.Rows[i]["PR"].GetValue<int>(int.MaxValue));
+                minValue = Math.Min(minValue, data.Rows[i]["R+"].GetValue<int>(int.MaxValue));
+
+                if (data.Columns.Count == 7)
+                {
+                    minValue = Math.Min(minValue, data.Rows[i]["PF"].GetValue<int>(int.MaxValue));
+                    minValue = Math.Min(minValue, data.Rows[i]["PF+"].GetValue<int>(int.MaxValue));
+                }
+
+
+                if (data.Columns.Count == 5)
+                    temp = string.Format("{0} & {1} & {2} & {3}",
+                                            fortMinColumn(minValue, data.Rows[i]["R"].GetValue<string>(string.Empty)),
+                                            fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<string>(string.Empty)),
+                                            fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<string>(string.Empty)),
+                                            fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<string>(string.Empty)));
+                else if (data.Columns.Count == 7)
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5}",
+                                        fortMinColumn(minValue, data.Rows[i]["R"].GetValue<string>(string.Empty)),
+                                        fortMinColumn(minValue, data.Rows[i]["PF"].GetValue<string>(string.Empty)),
+                                        fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<string>(string.Empty)),
+                                        fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<string>(string.Empty)),
+                                        fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<string>(string.Empty)),
+                                        fortMinColumn(minValue, data.Rows[i]["PF+"].GetValue<string>(string.Empty)));
+
+            }
+
+
+            //cmd.CommandText = @"select Name,[R],[PF],[RVO],[PR],[R+],[PF+] from [ReportResultAVG] where id_map = @ID_Map";
+            //    else
+            //        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from [ReportResultAVG] where id_map = @ID_Map";
+
+            //  Nazwa komponentu            &Dane techniczne \\ \hline \hline
+
+
+            return result.ToString();
+        }
+
+        private string fortMinColumn(int minValue,string data)
+        {
+
+            return "";
+        }
     }
 }
