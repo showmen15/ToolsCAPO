@@ -665,8 +665,15 @@ namespace ExcelTest
                 tableResult.AppendLine(string.Format("%{0}", item.MapName));
 
                 tableResult.AppendLine(formatedTable);
+                tableResult.AppendLine(@"\end{tabular}");
+                tableResult.AppendLine(@"\end{table}");
+
                 tableResult.AppendLine();
+
+                string ss = tableResult.ToString();
             }
+
+
         }
 
         private void ExportAVGSimulationDataPDF()
@@ -679,7 +686,7 @@ namespace ExcelTest
         {
             StringBuilder result = new StringBuilder();
 
-            result.AppendLine(@"\begin{table}[!ht");
+            result.AppendLine(@"\begin{table}[!ht]");
             result.AppendLine(@"	\caption{" + sTableName + "}");
 
             if (data.Columns.Count == 5)
@@ -693,13 +700,15 @@ namespace ExcelTest
             string temp = string.Empty;
 
             if (data.Columns.Count == 5)
-                temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline", data.Columns[0].ColumnName,
+                temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline", 
+                                         data.Columns["Name"].ColumnName,
                                          data.Columns["R"].ColumnName,
                                          data.Columns["RVO"].ColumnName,
                                          data.Columns["PR"].ColumnName,
                                          data.Columns["R+"].ColumnName);
             else if (data.Columns.Count == 7)
-                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6}\\\\ \\hline \\hline", data.Columns[0].ColumnName,
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6}\\\\ \\hline \\hline", 
+                                             data.Columns["Name"].ColumnName,
                                              data.Columns["R"].ColumnName,
                                              data.Columns["PF"].ColumnName,
                                              data.Columns["RVO"].ColumnName,
@@ -725,19 +734,23 @@ namespace ExcelTest
 
 
                 if (data.Columns.Count == 5)
-                    temp = string.Format("{0} & {1} & {2} & {3}",
-                                            fortMinColumn(minValue, data.Rows[i]["R"].GetValue<string>(string.Empty)),
-                                            fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<string>(string.Empty)),
-                                            fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<string>(string.Empty)),
-                                            fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<string>(string.Empty)));
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline",
+                                            data.Rows[i]["Name"].GetValue<string>(string.Empty),
+                                            fortMinColumn(minValue, data.Rows[i]["R"].GetValue<int>(-1)),
+                                            fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<int>(-1)),
+                                            fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<int>(-1)),
+                                            fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<int>(-1)));
                 else if (data.Columns.Count == 7)
-                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5}",
-                                        fortMinColumn(minValue, data.Rows[i]["R"].GetValue<string>(string.Empty)),
-                                        fortMinColumn(minValue, data.Rows[i]["PF"].GetValue<string>(string.Empty)),
-                                        fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<string>(string.Empty)),
-                                        fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<string>(string.Empty)),
-                                        fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<string>(string.Empty)),
-                                        fortMinColumn(minValue, data.Rows[i]["PF+"].GetValue<string>(string.Empty)));
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\ \\hline",
+                                        data.Rows[i]["Name"].GetValue<string>(string.Empty),
+                                        fortMinColumn(minValue, data.Rows[i]["R"].GetValue<int>(-1)),
+                                        fortMinColumn(minValue, data.Rows[i]["PF"].GetValue<int>(-1)),
+                                        fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<int>(-1)),
+                                        fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<int>(-1)),
+                                        fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<int>(-1)),
+                                        fortMinColumn(minValue, data.Rows[i]["PF+"].GetValue<int>(-1)));
+
+                result.AppendLine(temp);
 
             }
 
@@ -752,10 +765,17 @@ namespace ExcelTest
             return result.ToString();
         }
 
-        private string fortMinColumn(int minValue,string data)
+        private string fortMinColumn(int minValue, int data)
         {
-
-            return "";
+            if (data == -1)
+                return string.Empty;
+            else
+            {
+                if (minValue == data)
+                    return @"\textbf{" + data.ToString() + "}";
+                else
+                    return data.ToString();
+            }
         }
     }
 }
