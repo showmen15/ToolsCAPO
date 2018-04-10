@@ -26,7 +26,7 @@ namespace ExcelTest
             InitializeComponent();
 
             //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
+           // SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI;";
 
 //            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratRobot;Integrated Security=SSPI;";
 
@@ -642,38 +642,38 @@ namespace ExcelTest
 
         private void ExportAVGRobotDataPDF()
         {
-            SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI";
+            //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=DoktoratSymulacja;Integrated Security=SSPI";
+           // SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=DoktoratSymulacjaNowa; User Id=szsz; Password=szsz;";
+            SQL.ConnectionString = @"data source=SZSZ\SQLEXPRESS;initial catalog=DoktoratRobot; User Id=szsz; Password=szsz;";
+
+            
             //SQL.ConnectionString = @"data source=WR-7-BASE-74\SQLEXPRESS;initial catalog=Doktorat;Integrated Security=SSPI;";
 
             MapItem[] mapList = SQL.DataProviderExport.GetExportMapList();
-            StringBuilder tableResult = new StringBuilder();
+           // StringBuilder tableResult = new StringBuilder();
 
 
             foreach (var item in mapList)
             {
+                StringBuilder tableResult = new StringBuilder();
+
                 System.Data.DataTable result;
-                
 
-                if (item.ID_Map == 11)
-                    result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, true);
-                else
-                    result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, false);
+                /*   if (item.ID_Map == 11)
+                       result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, true);
+                   else
+                       result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, false);*/
 
-                string formatedTable = formatAVGTable(result,item.MapName);
+                result = SQL.DataProviderExport.GetAVGExportResult(item.ID_Map, false);
 
-                tableResult.AppendLine();
-                tableResult.AppendLine(string.Format("%{0}", item.MapName));
+                string formatedTable = formatAVGTable(item.ID_Map,result, item.MapName);
 
                 tableResult.AppendLine(formatedTable);
-                tableResult.AppendLine(@"\end{tabular}");
-                tableResult.AppendLine(@"\end{table}");
 
                 tableResult.AppendLine();
 
                 string ss = tableResult.ToString();
             }
-
-
         }
 
         private void ExportAVGSimulationDataPDF()
@@ -682,39 +682,89 @@ namespace ExcelTest
         }
 
 
-        private string formatAVGTable(System.Data.DataTable data, string sTableName)
+        private string formatAVGTable(int ID_Map, System.Data.DataTable data, string sTableName)
         {
             StringBuilder result = new StringBuilder();
 
-            result.AppendLine(@"\begin{table}[!ht]");
-            result.AppendLine(@"	\caption{" + sTableName + "}");
+            result.AppendLine();
+            result.AppendLine(string.Format("%{0}", sTableName));
+            result.AppendLine();
 
-            if (data.Columns.Count == 5)
-                result.AppendLine(@"\begin{tabular}{|l|l|l|l|l|}");
-            else if (data.Columns.Count == 7)
-                result.AppendLine(@"\begin{tabular}{|l|l|l|l|l|}");
+            result.AppendLine(@"\begin{table}[!ht]");
+            result.AppendLine(@"	\centering");
+            result.AppendLine(@"	\caption{" + sTableName + "}");
+            result.AppendLine(@"	\begin{multicols}{2}");
+
+            //  if (data.Columns.Count == 5)
+            //      result.AppendLine(@"\begin{tabular}{|c|c|c|c|c|}");
+            //  else if (data.Columns.Count == 7)
+            // result.AppendLine(@"\begin{tabular}{|p{1.8cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|p{0.9cm}|}");
+
+            result.AppendLine(@"\begin{tabular}{|c|c|c|c|c|}");
 
             result.AppendLine(@"		\hline");
 
             //Dodanie naglowka kolumn
             string temp = string.Empty;
 
-            if (data.Columns.Count == 5)
-                temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline", 
-                                         data.Columns["Name"].ColumnName,
+            switch (ID_Map)
+            {
+                case 6: //  Eight intersection
+                case 10:  //Open space
+                case 15: //  Crossroad
+                case 16: //  Circle
+                case 19:
+                case 21:
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline",
+                                         "Ustawienie robotów",//data.Columns["Name"].ColumnName,
                                          data.Columns["R"].ColumnName,
                                          data.Columns["RVO"].ColumnName,
                                          data.Columns["PR"].ColumnName,
                                          data.Columns["R+"].ColumnName);
-            else if (data.Columns.Count == 7)
-                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6}\\\\ \\hline \\hline", 
-                                             data.Columns["Name"].ColumnName,
-                                             data.Columns["R"].ColumnName,
-                                             data.Columns["PF"].ColumnName,
-                                             data.Columns["RVO"].ColumnName,
-                                             data.Columns["PR"].ColumnName,
-                                             data.Columns["R+"].ColumnName,
-                                             data.Columns["PF+"].ColumnName);
+                    break;
+                   
+                case 11: //  Passage through the door
+                case 17:
+                    temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline",
+                                        "Ustawienie robotów",//data.Columns["Name"].ColumnName,
+                                        data.Columns["R"].ColumnName,
+                                        data.Columns["PF"].ColumnName,
+                                        data.Columns["R+"].ColumnName,
+                                        data.Columns["PF+"].ColumnName);
+                    break;
+                case 13: //  A narrow corridor
+                case 18: //  Passing place
+                case 20:
+                    temp = string.Format("{0} & {1} & {2} & \\\\ \\hline \\hline",
+                                      "Ustawienie robotów",//data.Columns["Name"].ColumnName,
+                                      data.Columns["R"].ColumnName,
+                                      data.Columns["R+"].ColumnName);
+                    break;
+                default:
+                    break;
+            }
+
+
+
+            //if (data.Columns.Count == 5)
+            //    temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline \\hline",
+            //                             "Ustawienie robotów",//data.Columns["Name"].ColumnName,
+            //                             data.Columns["R"].ColumnName,
+            //                             data.Columns["RVO"].ColumnName,
+            //                             data.Columns["PR"].ColumnName,
+            //                             data.Columns["R+"].ColumnName);
+
+
+
+            //else if (data.Columns.Count == 7)
+            //        temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6}\\\\ \\hline \\hline", 
+            //                                 data.Columns["Name"].ColumnName,
+            //                                 data.Columns["R"].ColumnName,
+            //                                 data.Columns["PF"].ColumnName,
+            //                                 data.Columns["RVO"].ColumnName,
+            //                                 data.Columns["PR"].ColumnName,
+            //                                 data.Columns["R+"].ColumnName,
+            //                                 data.Columns["PF+"].ColumnName);
 
             result.AppendLine(temp);
 
@@ -722,45 +772,58 @@ namespace ExcelTest
             {
                 int minValue;
 
-                minValue = Math.Min(data.Rows[i]["R"].GetValue<int>(int.MaxValue), data.Rows[i]["RVO"].GetValue<int>(int.MaxValue));
-                minValue = Math.Min(minValue, data.Rows[i]["PR"].GetValue<int>(int.MaxValue));
-                minValue = Math.Min(minValue, data.Rows[i]["R+"].GetValue<int>(int.MaxValue));
+                minValue = Math.Min(data.Rows[i][1].GetValue<int>(int.MaxValue), data.Rows[i][2].GetValue<int>(int.MaxValue));
 
-                if (data.Columns.Count == 7)
-                {
-                    minValue = Math.Min(minValue, data.Rows[i]["PF"].GetValue<int>(int.MaxValue));
-                    minValue = Math.Min(minValue, data.Rows[i]["PF+"].GetValue<int>(int.MaxValue));
-                }
+                for (int j = 2; j < data.Columns.Count; j++)
+                    minValue = Math.Min(minValue, data.Rows[i][j].GetValue<int>(int.MaxValue));
 
+                //minValue = Math.Min(data.Rows[i]["R"].GetValue<int>(int.MaxValue), data.Rows[i]["RVO"].GetValue<int>(int.MaxValue));
+                //minValue = Math.Min(minValue, data.Rows[i]["PR"].GetValue<int>(int.MaxValue));
+                //minValue = Math.Min(minValue, data.Rows[i]["R+"].GetValue<int>(int.MaxValue));
 
-                if (data.Columns.Count == 5)
-                    temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline",
-                                            data.Rows[i]["Name"].GetValue<string>(string.Empty),
-                                            fortMinColumn(minValue, data.Rows[i]["R"].GetValue<int>(-1)),
-                                            fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<int>(-1)),
-                                            fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<int>(-1)),
-                                            fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<int>(-1)));
-                else if (data.Columns.Count == 7)
-                    temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\ \\hline",
-                                        data.Rows[i]["Name"].GetValue<string>(string.Empty),
-                                        fortMinColumn(minValue, data.Rows[i]["R"].GetValue<int>(-1)),
-                                        fortMinColumn(minValue, data.Rows[i]["PF"].GetValue<int>(-1)),
-                                        fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<int>(-1)),
-                                        fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<int>(-1)),
-                                        fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<int>(-1)),
-                                        fortMinColumn(minValue, data.Rows[i]["PF+"].GetValue<int>(-1)));
+                //if (data.Columns.Count == 7)
+                //{
+                //    minValue = Math.Min(minValue, data.Rows[i]["PF"].GetValue<int>(int.MaxValue));
+                //    minValue = Math.Min(minValue, data.Rows[i]["PF+"].GetValue<int>(int.MaxValue));
+                //}
+
+                temp = data.Rows[i]["Name"].GetValue<string>(string.Empty);
+
+                for (int k = 1; k < data.Columns.Count; k++)
+                    temp += string.Format(" & {0}", fortMinColumn(minValue, data.Rows[i][k].GetValue<int>(-1)));
+
+                temp += "\\\\ \\hline";
+
+        //string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline",
+
+        //                        ,
+
+        //        if (data.Columns.Count == 5)
+        //            temp = string.Format("{0} & {1} & {2} & {3} & {4} \\\\ \\hline",
+        //                                    data.Rows[i]["Name"].GetValue<string>(string.Empty),
+        //                                    fortMinColumn(minValue, data.Rows[i]["R"].GetValue<int>(-1)),
+        //                                    fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<int>(-1)),
+        //                                    fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<int>(-1)),
+        //                                    fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<int>(-1)));
+        //        else if (data.Columns.Count == 7)
+        //            temp = string.Format("{0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\ \\hline",
+        //                                data.Rows[i]["Name"].GetValue<string>(string.Empty),
+        //                                fortMinColumn(minValue, data.Rows[i]["R"].GetValue<int>(-1)),
+        //                                fortMinColumn(minValue, data.Rows[i]["PF"].GetValue<int>(-1)),
+        //                                fortMinColumn(minValue, data.Rows[i]["RVO"].GetValue<int>(-1)),
+        //                                fortMinColumn(minValue, data.Rows[i]["PR"].GetValue<int>(-1)),
+        //                                fortMinColumn(minValue, data.Rows[i]["R+"].GetValue<int>(-1)),
+        //                                fortMinColumn(minValue, data.Rows[i]["PF+"].GetValue<int>(-1)));
 
                 result.AppendLine(temp);
 
             }
 
 
-            //cmd.CommandText = @"select Name,[R],[PF],[RVO],[PR],[R+],[PF+] from [ReportResultAVG] where id_map = @ID_Map";
-            //    else
-            //        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from [ReportResultAVG] where id_map = @ID_Map";
 
-            //  Nazwa komponentu            &Dane techniczne \\ \hline \hline
-
+            result.AppendLine(@"\end{tabular}");
+            result.AppendLine(@"	\end{multicols}");
+            result.AppendLine(@"\end{table}");
 
             return result.ToString();
         }

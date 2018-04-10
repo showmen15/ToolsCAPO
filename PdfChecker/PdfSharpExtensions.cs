@@ -12,7 +12,7 @@ namespace PdfChecker
 {
     //https://stackoverflow.com/questions/2550796/reading-pdf-content-with-itextsharp-dll-in-vb-net-or-c-sharp
 
-    public class PdfTextSharpChecker
+    public class PdfTextSharpChecker : IDisposable
     {
 
         PdfReader pdfReader;
@@ -88,6 +88,12 @@ namespace PdfChecker
             }
             else
                 return true;
+        }
+
+        public void Dispose()
+        {
+            pdfReader.Close();
+            pdfReader.Dispose();
         }
     }
 }

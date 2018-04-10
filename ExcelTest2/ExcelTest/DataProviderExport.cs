@@ -111,10 +111,41 @@ namespace ExcelTest
                 DataTable result = new DataTable();
                 checkConnection();
 
-                if (allAlgorytm)
-                    cmd.CommandText = @"select Name,[R],[PF],[RVO],[PR],[R+],[PF+] from [ReportResultAVG] where id_map = @ID_Map";
-                else
-                    cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from [ReportResultAVG] where id_map = @ID_Map";
+                switch (ID_Map)
+                {
+                    case 6: //  Eight intersection
+                        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    case 10:  //Open space
+                    case 19:
+                        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    case 11: //  Passage through the door
+                    case 17:
+                        cmd.CommandText = @"select Name,[R],[PF],[R+],[PF+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    case 13: //  A narrow corridor
+                        cmd.CommandText = @"select Name,[R],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    case 15: //  Crossroad
+                        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    case 16: //  Circle
+                    case 21:
+                        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    case 18: //  Passing place
+                    case 20:
+                        cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                        break;
+                    default:
+                        break;
+                }
+
+                //if (allAlgorytm)
+                //    cmd.CommandText = @"select Name,[R],[PF],[RVO],[PR],[R+],[PF+] from dbo.ReportResultAVG where id_map = @ID_Map";
+                //else
+                //    cmd.CommandText = @"select Name,[R],[RVO],[PR],[R+] from dbo.ReportResultAVG where id_map = @ID_Map";
 
                 cmd.Parameters.AddWithValue("@ID_Map", ID_Map);
 

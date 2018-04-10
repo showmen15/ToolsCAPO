@@ -19,28 +19,38 @@ namespace PdfChecker
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string filename = @"C:\testDoc\docpublish.pdf";
-            
-            PdfTextSharpChecker pdf = new PdfTextSharpChecker(filename);
+            string filename = "..\\DocPublish.pdf"; //@"C:\testDoc\docpublish.pdf";
 
-            string logText = pdf.CheckPDF();
-            txtLog.Text = logText;
+            using (PdfTextSharpChecker pdf = new PdfTextSharpChecker(filename))
+            {
+                string logText = pdf.CheckPDF();
+                txtLog.Text = logText;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-           // string filename = @"C:\testDoc\docpublish.pdf";
+            string filename = "..\\DocPublish.pdf"; //@"C:\testDoc\docpublish.pdf";
 
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            using (PdfTextSharpChecker pdf = new PdfTextSharpChecker(filename))
             {
-                if (dlg.ShowDialog(this) == DialogResult.OK)
-                {
-                    PdfTextSharpChecker pdf = new PdfTextSharpChecker(dlg.FileName);
-
-                    string logText = pdf.CheckPDF(Convert.ToInt32(numBegin.Value), Convert.ToInt32(numEnd.Value));
-                    txtLog.Text = logText;
-                }
+                string logText = pdf.CheckPDF(Convert.ToInt32(numBegin.Value), Convert.ToInt32(numEnd.Value));
+                txtLog.Text = logText;
             }
+
+
+            // string filename = @"C:\testDoc\docpublish.pdf";
+
+            /*   using (OpenFileDialog dlg = new OpenFileDialog())
+               {
+                   if (dlg.ShowDialog(this) == DialogResult.OK)
+                   {
+                       PdfTextSharpChecker pdf = new PdfTextSharpChecker(dlg.FileName);
+
+                       string logText = pdf.CheckPDF(Convert.ToInt32(numBegin.Value), Convert.ToInt32(numEnd.Value));
+                       txtLog.Text = logText;
+                   }
+               }*/
         }
     }
 
