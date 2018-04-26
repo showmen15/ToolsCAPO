@@ -14,6 +14,11 @@ namespace PdfChecker
         Regex regCytowania = new Regex(@"\\cite\{[A-Za-z0-9,\s]+\}\s+\.");
         Regex regMyslniki = new Regex(@"(\s\-\s)");
 
+        Regex regProcent = new Regex(@"%"); // %Jakis komentarz
+        Regex regCudzyslow = new Regex(@"(''[A-Za-z0-9,\s]+'')"); //''tekst''
+
+        Regex regCytowaniaPoprzedzoneLiterom = new Regex(@"[A-Za-z]+\\cite"); // ala\cite
+
 
         Regex regAlgorytmyLinkReplace = new Regex(@"((((\\lookupGetHref)|(\\lookupGetUrl)|(\\lookupGetHrefURL)|(\\lookupPut))\{[\w+\s-\n\.]+\}))|(\$\sR\s\$)");
         Regex regAlgorytmy = new Regex(@"(\s)((R)|(R\+)|(PF)|(PF\+)|(RVO)|(PR))((\s)|(\.))");
@@ -41,6 +46,20 @@ namespace PdfChecker
                 matchCollection = regMyslniki.Matches(sTextLines[i]);
                 if (matchCollection.Count > 0)
                     log.AppendLine(logPattern(sFileName, matchCollection, "regMyslniki", i));
+
+
+                matchCollection = regProcent.Matches(sTextLines[i]);
+                if (matchCollection.Count > 0)
+                    log.AppendLine(logPattern(sFileName, matchCollection, "regProcent", i));
+
+
+                matchCollection = regCudzyslow.Matches(sTextLines[i]);
+                if (matchCollection.Count > 0)
+                    log.AppendLine(logPattern(sFileName, matchCollection, "regPrzecinki", i));
+
+                matchCollection = regCytowaniaPoprzedzoneLiterom.Matches(sTextLines[i]);
+                if (matchCollection.Count > 0)
+                    log.AppendLine(logPattern(sFileName, matchCollection, "regCytowaniaPoprzedzoneLiterom", i));
 
                 input = sTextLines[i];
                 input = regAlgorytmyLinkReplace.Replace(input, "REPLACE:LINK");

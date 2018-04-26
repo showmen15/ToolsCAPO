@@ -71,6 +71,11 @@
             // numBegin
             // 
             this.numBegin.Location = new System.Drawing.Point(349, 26);
+            this.numBegin.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
             this.numBegin.Name = "numBegin";
             this.numBegin.Size = new System.Drawing.Size(120, 20);
             this.numBegin.TabIndex = 3;
@@ -83,11 +88,16 @@
             // numEnd
             // 
             this.numEnd.Location = new System.Drawing.Point(491, 26);
+            this.numEnd.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
             this.numEnd.Name = "numEnd";
             this.numEnd.Size = new System.Drawing.Size(117, 20);
             this.numEnd.TabIndex = 4;
             this.numEnd.Value = new decimal(new int[] {
-            100,
+            110,
             0,
             0,
             0});

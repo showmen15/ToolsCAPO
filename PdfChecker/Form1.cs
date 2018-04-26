@@ -32,6 +32,8 @@ namespace PdfChecker
 
         private void button2_Click(object sender, EventArgs e)
         {
+            txtLog.Clear();
+
             string filename = "..\\DocPublish.pdf"; //@"C:\testDoc\docpublish.pdf";
 
             using (PdfTextSharpChecker pdf = new PdfTextSharpChecker(filename))
@@ -57,7 +59,9 @@ namespace PdfChecker
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string sTextFileDirectory = @"J:\Doktorat\DocPublish";
+            txtRegexLog.Clear();
+
+            string sTextFileDirectory = ".."; //@"J:\Doktorat\DocPublish";
 
             RegexChecker reg = new RegexChecker();
             StringBuilder Log = new StringBuilder();
