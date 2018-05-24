@@ -21,6 +21,3 @@ namespace ExcelTest
     }
 }
 
-//www wp.pl
-
-    //ttest
