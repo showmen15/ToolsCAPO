@@ -21,7 +21,7 @@ namespace PdfChecker
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string filename = "..\\DocPublish.pdf"; //@"C:\testDoc\docpublish.pdf";
+            string filename = "..\\RozprawaDoktorskaSzominski.pdf"; //@"C:\testDoc\docpublish.pdf";
 
             using (PdfTextSharpChecker pdf = new PdfTextSharpChecker(filename))
             {
@@ -32,7 +32,9 @@ namespace PdfChecker
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string filename = "..\\DocPublish.pdf"; //@"C:\testDoc\docpublish.pdf";
+            txtLog.Clear();
+
+            string filename = "..\\RozprawaDoktorskaSzominski.pdf"; //@"C:\testDoc\docpublish.pdf";
 
             using (PdfTextSharpChecker pdf = new PdfTextSharpChecker(filename))
             {
@@ -57,7 +59,9 @@ namespace PdfChecker
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string sTextFileDirectory = @"J:\Doktorat\DocPublish";
+            txtRegexLog.Clear();
+
+            string sTextFileDirectory = ".."; //@"J:\Doktorat\DocPublish";
 
             RegexChecker reg = new RegexChecker();
             StringBuilder Log = new StringBuilder();
@@ -87,43 +91,78 @@ namespace PdfChecker
 
         }
 
-            ///*string sTestedLog;
-            //string[] sTestedTexLines;
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Regex regExistsFile = new Regex(@"run:([A-Za-z0-9/\s\+\-\.]+)");
+            string[] input = File.ReadAllLines(@"J:\Doktorat\DocPublish\lookup\lookup.tex");
+            string sFilePath;
 
-            //string sPatternCytowania = @"(\s\-\s)";
-            ////Regex reg = Regex.
-
-            //foreach (var file in sFileList)
-            //{
-            //    //sTestedLog = File.ReadAllText(file);
-
-            //    sTestedTexLines = File.ReadAllLines(file);
-
-            //    for (int i = 0; i < sTestedTexLines.Length; i++)
-            //    {
-            //        MatchCollection matchCollection = Regex.Matches(sTestedTexLines[i], sPatternCytowania);
-
-            //        foreach (var match in matchCollection)
-            //        {
-
-            //        }
-            //    }
-
-               
-
-            //    //MatchCollection matchCollection =  Regex.Matches(sTestedLog, sPatternCytowania);
-
-            //    //foreach (var match in matchCollection)
-            //    /*{
-
-            //    }*/
-
-            //}
+            string startPath = @"D:\Moje dokumenty\Uczelnia\AGH\Doktorat\Płyta\";
 
 
-       
 
-       
+            foreach (var item in input)
+            {
+                MatchCollection matchCollection = regExistsFile.Matches(item);
+
+                if (matchCollection.Count > 0)
+                {
+                    sFilePath = matchCollection[0].Value.Replace("run:", string.Empty);
+                    sFilePath = sFilePath.Replace("/", "\\");
+
+                    sFilePath = string.Format("{0}{1}", startPath, sFilePath);
+
+                    if(!File.Exists(sFilePath))
+                    {
+                        System.Console.WriteLine(sFilePath);
+                    }
+
+
+                        }
+            }
+
+          
+
+
+        }
+
+        ///*string sTestedLog;
+        //string[] sTestedTexLines;
+
+        //string sPatternCytowania = @"(\s\-\s)";
+        ////Regex reg = Regex.
+
+        //foreach (var file in sFileList)
+        //{
+        //    //sTestedLog = File.ReadAllText(file);
+
+        //    sTestedTexLines = File.ReadAllLines(file);
+
+        //    for (int i = 0; i < sTestedTexLines.Length; i++)
+        //    {
+        //        MatchCollection matchCollection = Regex.Matches(sTestedTexLines[i], sPatternCytowania);
+
+        //        foreach (var match in matchCollection)
+        //        {
+
+        //        }
+        //    }
+
+
+
+        //    //MatchCollection matchCollection =  Regex.Matches(sTestedLog, sPatternCytowania);
+
+        //    //foreach (var match in matchCollection)
+        //    /*{
+
+        //    }*/
+
+        //}
+
+
+
+
+
 
     }
 }

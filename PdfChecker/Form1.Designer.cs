@@ -35,6 +35,7 @@
             this.numEnd = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.txtRegexLog = new System.Windows.Forms.TextBox();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numBegin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numEnd)).BeginInit();
             this.SuspendLayout();
@@ -71,6 +72,11 @@
             // numBegin
             // 
             this.numBegin.Location = new System.Drawing.Point(349, 26);
+            this.numBegin.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
             this.numBegin.Name = "numBegin";
             this.numBegin.Size = new System.Drawing.Size(120, 20);
             this.numBegin.TabIndex = 3;
@@ -83,11 +89,16 @@
             // numEnd
             // 
             this.numEnd.Location = new System.Drawing.Point(491, 26);
+            this.numEnd.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
             this.numEnd.Name = "numEnd";
             this.numEnd.Size = new System.Drawing.Size(117, 20);
             this.numEnd.TabIndex = 4;
             this.numEnd.Value = new decimal(new int[] {
-            100,
+            110,
             0,
             0,
             0});
@@ -111,11 +122,22 @@
             this.txtRegexLog.Size = new System.Drawing.Size(789, 315);
             this.txtRegexLog.TabIndex = 6;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(702, 279);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(813, 635);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.txtRegexLog);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.numEnd);
@@ -141,6 +163,7 @@
         private System.Windows.Forms.NumericUpDown numEnd;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox txtRegexLog;
+        private System.Windows.Forms.Button button4;
     }
 }
 
