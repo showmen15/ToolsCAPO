@@ -6,7 +6,7 @@ pdf(filenameOutput, encoding="ISOLatin2")
 
 #boxplot(dat, col=c("blue", "green", "red", "white","orange","yellow"), names=c("R","PF","RVO","PR","R+","PF+"),  main=chartName, xlab="Algorithm name", ylab="Total time for all robots" )
 #boxplot(dat, col=c("blue", "green", "red", "white","orange","yellow"), names=c("R","PF","RVO","PR","R+","PF+"),  main=chartName, xlab="Nazwa algorytmu", ylab="£¹ czny czas dla wszystkich robotów"  )
-boxplot(dat, col=c("blue", "green", "red", "white","orange","yellow"), names=c("R","PF","RVO","PR","R+","PF+"),  xlab="Nazwa algorytmu", ylab="£¹ czny czas dla wszystkich robotów"  )
+boxplot(dat, col=c("blue", "green", "red", "white","orange","yellow"), names=c("R","PF","RVO","PR","R+","PF+"),  xlab="Algorithm", ylab="Total time for all robots"  )
 #mtext(text=testResult, side=4, adj = 0, cex=0.7)
 
 }
