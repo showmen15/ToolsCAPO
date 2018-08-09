@@ -23,6 +23,9 @@ namespace PdfChecker
         Regex regAlgorytmyLinkReplace = new Regex(@"((((\\lookupGetHref)|(\\lookupGetUrl)|(\\lookupGetHrefURL)|(\\lookupPut))\{[\w+\s-\n\.]+\}))|(\$\sR\s\$)");
         Regex regAlgorytmy = new Regex(@"(\s)((R)|(R\+)|(PF)|(PF\+)|(RVO)|(PR))((\s)|(\.))");
 
+
+        Regex regJednostki = new Regex(@"\s[0-9\.]+[A-Za-z,{}]+\s"); // 20 cm itd
+
         public RegexChecker()
         {
 
@@ -66,6 +69,12 @@ namespace PdfChecker
                 matchCollection = regAlgorytmy.Matches(input);
                 if (matchCollection.Count > 0)
                     log.AppendLine(logPattern(sFileName, matchCollection, "regAlgorytmy", i));
+
+
+                matchCollection = regJednostki.Matches(sTextLines[i]);
+                if (matchCollection.Count > 0)
+                    log.AppendLine(logPattern(sFileName, matchCollection, "regJednostki", i));
+
             }
 
             return log.ToString();
