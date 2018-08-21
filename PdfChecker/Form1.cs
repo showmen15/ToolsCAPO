@@ -112,18 +112,25 @@ namespace PdfChecker
 
                     sFilePath = string.Format("{0}{1}", startPath, sFilePath);
 
-                    if(!File.Exists(sFilePath))
+                    if (!File.Exists(sFilePath))
                     {
                         System.Console.WriteLine(sFilePath);
                     }
-
-
-                        }
+                }
             }
+        }
 
-          
+        private void button5_Click(object sender, EventArgs e)
+        {
+            txtLog.Clear();
 
+            string filename = @"J:\Doktorat\DocPublish\RozprawaDoktorskaSzominski.pdf";  //"..\\RozprawaDoktorskaSzominski.pdf"; //@"C:\testDoc\docpublish.pdf";
 
+            using (PdftoText pdf = new PdftoText(filename))
+            {
+                string logText = pdf.CheckPDF(Convert.ToInt32(numBegin.Value) -1, Convert.ToInt32(numEnd.Value));
+                txtLog.Text = logText;
+            }   
         }
 
         ///*string sTestedLog;
