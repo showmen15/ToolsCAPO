@@ -124,7 +124,7 @@ namespace PdfChecker
         {
             txtLog.Clear();
 
-            string filename = @"J:\Doktorat\DocPublish\RozprawaDoktorskaSzominski.pdf";  //"..\\RozprawaDoktorskaSzominski.pdf"; //@"C:\testDoc\docpublish.pdf";
+            string filename = "..\\RozprawaDoktorskaSzominski.pdf"; ;  //"..\\RozprawaDoktorskaSzominski.pdf"; //@"C:\testDoc\docpublish.pdf";
 
             using (PdftoText pdf = new PdftoText(filename))
             {

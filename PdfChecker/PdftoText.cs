@@ -131,7 +131,7 @@ namespace PdfChecker
 
         private string logPattern(int sPageNumber, MatchCollection matchCollection, string sPattern, int lineNr, string sLine)
         {
-            return string.Format("({0}: {1}) ==> {2} ->> ({3})", sPageNumber, lineNr, sPattern, sLine);
+            return string.Format("({0}: {1}) ==> {2} --> {3}", sPageNumber, lineNr, sPattern, sLine);
         }
 
         //public string CheckFile(string sFilePath)
