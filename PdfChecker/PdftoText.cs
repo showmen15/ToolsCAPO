@@ -11,6 +11,7 @@ namespace PdfChecker
 {
     public class PdftoText : IDisposable
     {
+      //  https://www.systutorials.com/docs/linux/man/1-pdftotext/
 
         Regex regSingleLetterEndLine = new Regex(@"\s.$");
 
