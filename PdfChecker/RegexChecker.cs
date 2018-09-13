@@ -58,7 +58,7 @@ namespace PdfChecker
 
                 matchCollection = regCudzyslow.Matches(sTextLines[i]);
                 if (matchCollection.Count > 0)
-                    log.AppendLine(logPattern(sFileName, matchCollection, "regPrzecinki", i));
+                    log.AppendLine(logPattern(sFileName, matchCollection, "regCudzyslow", i));
 
                 matchCollection = regCytowaniaPoprzedzoneLiterom.Matches(sTextLines[i]);
                 if (matchCollection.Count > 0)
