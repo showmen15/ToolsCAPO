@@ -77,6 +77,8 @@ namespace PdfChecker
             getOldTexFile.Add(string.Format("{0}\\{1}", sTextFileDirectory, @"05_hybrid_algorithm\FearFactorBase.tex")); //ze wzgledu na wzory
             getOldTexFile.Add(string.Format("{0}\\{1}", sTextFileDirectory, @"05_hybrid_algorithm\FactorPassageBy.tex")); //ze wzgledu na wzory
 
+            getOldTexFile.Add(string.Format("{0}\\{1}", sTextFileDirectory, @"reviews\reviewAmbroszkiewicz.tex")); //ze wzgledu na recenzje
+            getOldTexFile.Add(string.Format("{0}\\{1}", sTextFileDirectory, @"reviews\reviewZubert.tex")); //ze wzgledu na recenzje
 
             foreach (var item in getOldTexFile)      //usun old oraz  wykluczone
                 getAllTexFile.Remove(item);
