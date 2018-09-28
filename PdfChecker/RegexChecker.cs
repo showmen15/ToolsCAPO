@@ -11,11 +11,11 @@ namespace PdfChecker
     public class RegexChecker
     {
         
-        Regex regCytowania = new Regex(@"\\cite\{[A-Za-z0-9,\s]+\}\s+\.");
+        Regex regCytowania = new Regex(@"(\\cite\{[A-Za-z0-9,\s]+\}\s+\.)|(\\cite\{(\w|[0-9,\s])+\}\s+\.)");
         Regex regMyslniki = new Regex(@"(\s\-\s)");
 
         Regex regProcent = new Regex(@"%"); // %Jakis komentarz
-        Regex regCudzyslow = new Regex(@"(''[A-Za-z0-9,\s]+'')"); //''tekst''
+        Regex regCudzyslow = new Regex(@"(''(\w|[0-9\s])+'')"); //''tekst''
 
         Regex regCytowaniaPoprzedzoneLiterom = new Regex(@"[A-Za-z]+\\cite"); // ala\cite
 
@@ -24,7 +24,7 @@ namespace PdfChecker
         Regex regAlgorytmy = new Regex(@"(\s)((R)|(R\+)|(PF)|(PF\+)|(RVO)|(PR))((\s)|(\.))");
 
 
-        Regex regJednostki = new Regex(@"\s[0-9\.]+[A-Za-z,{}]+\s"); // 20 cm itd
+        //Regex regJednostki = new Regex(@"\s[0-9\.]+[A-Za-z,{}]+\s"); // 20 cm itd
 
         public RegexChecker()
         {
@@ -71,9 +71,9 @@ namespace PdfChecker
                     log.AppendLine(logPattern(sFileName, matchCollection, "regAlgorytmy", i));
 
 
-                matchCollection = regJednostki.Matches(sTextLines[i]);
+               /* matchCollection = regJednostki.Matches(sTextLines[i]);
                 if (matchCollection.Count > 0)
-                    log.AppendLine(logPattern(sFileName, matchCollection, "regJednostki", i));
+                    log.AppendLine(logPattern(sFileName, matchCollection, "regJednostki", i));*/
 
             }
 
