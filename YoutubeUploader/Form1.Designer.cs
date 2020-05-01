@@ -35,11 +35,15 @@
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // butUpload
             // 
-            this.butUpload.Location = new System.Drawing.Point(27, 23);
+            this.butUpload.Location = new System.Drawing.Point(6, 19);
             this.butUpload.Name = "butUpload";
             this.butUpload.Size = new System.Drawing.Size(75, 23);
             this.butUpload.TabIndex = 0;
@@ -59,7 +63,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(27, 94);
+            this.button2.Location = new System.Drawing.Point(287, 205);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
@@ -107,20 +111,53 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.button8);
+            this.groupBox1.Controls.Add(this.button7);
+            this.groupBox1.Controls.Add(this.butUpload);
+            this.groupBox1.Location = new System.Drawing.Point(24, 23);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 183);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "groupBox1";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(6, 83);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(107, 23);
+            this.button7.TabIndex = 1;
+            this.button7.Text = "Pobierz tytyły";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(6, 126);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(107, 23);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "AktualizujTytul";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(544, 273);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.butUpload);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -134,6 +171,9 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
 

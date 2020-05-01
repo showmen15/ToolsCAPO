@@ -24,7 +24,8 @@ namespace YoutubeUploader
         private void butUpload_Click(object sender, EventArgs e)
         {
             string idUpload;
-            string[] sFilePath = new string[] { @"C:\git\youtube\Test.mp4"};
+            //string[] sFilePath = new string[] { @"C:\git\youtube\Test.mp4"};
+            string[] sFilePath = new string[] { @"D:\Moje dokumenty\Uczelnia\AGH\Doktorat\Robot AGH\Tools\ToolsCAPO\YoutubeUploader\Test\Test.mp4" };
             GoogleYoutubeUploader.YoutubeUploader upload = new GoogleYoutubeUploader.YoutubeUploader();
 
             string filePath;
@@ -35,7 +36,7 @@ namespace YoutubeUploader
             foreach (var item in sFilePath)
             {
                 filePath = item;
-                Title = "Otwarta przestrzeń PF+ 8-1";
+                Title = "Test 11.04.2020";
                 Description = "";
                 Tags = null;
 
@@ -878,6 +879,36 @@ namespace YoutubeUploader
             // sMovieDirectory = @"C:\testDoc\PHD2\Robot\Robot";
 
             // renameMovieRobot(sMovieDirectory);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            GoogleYoutubeUploader.YoutubeUploader upload = new GoogleYoutubeUploader.YoutubeUploader();
+
+            string[] listYouTube = File.ReadAllLines("YoutubeList.txt");
+            StringBuilder outputFile = new StringBuilder();
+
+            foreach (var item in listYouTube)
+            {
+                string id = item.Replace("\"", "");
+                string titel = upload.GetVideoTitel(id);
+
+                outputFile.AppendLine(string.Format("{0};\"{1}\"", item, titel));
+            }
+
+            File.AppendAllText("outNew.txt", outputFile.ToString());    
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            GoogleYoutubeUploader.YoutubeUploader upload = new GoogleYoutubeUploader.YoutubeUploader();
+
+            List<VideoItem> videoItem = File.ReadAllLines("YoutubeListUpdate.csv").Select(line => new VideoItem(line)).ToList();
+
+            foreach (var item in videoItem)
+            {
+                upload.UpdateVideoTitel(item.Id, item.Titel);
+            }
         }
     }
 }
